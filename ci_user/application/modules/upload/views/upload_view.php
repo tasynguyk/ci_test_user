@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Profile</title>
-
+	<title>Upload image</title>
+        <script src="<?php echo base_url()?>public/js/jquery.min.js"></script>
 	<style type="text/css">
 
 	::selection{ background-color: #E13300; color: white; }
@@ -63,30 +63,32 @@
 		-webkit-box-shadow: 0 0 8px #D0D0D0;
 	}
 	</style>
+        
 </head>
     <body>
-        Hi <b><?php echo $this->session->userdata('username'); ?></b>
-        <?php
-            if($this->session->userdata('permission')==1)
-            {
-                ?>
-                    <a href="<?php echo base_url().'index.php/admin/create'; ?>">Create user</a>
-                    <a href="<?php echo base_url().'index.php/manage/manage'; ?>">Manage user</a>
-                <?php
-            }
-        ?>
-        <a href="<?php echo base_url().'index.php/upload/upload'; ?>">Upload avatar</a>           
-        <a href="<?php echo base_url().'index.php/login/log/logout'; ?>">Logout</a><br />
-        <?php
-            $id = $this->session->userdata('id');
-            if(file_exists(FCPATH.'uploads/'.$id.'.jpg'))
-            {
-                ?>
-        <img src="<?php echo FCPATH.'uploads/'.$id.'.jpg' ?>" height="100" width="100" />
+        <form method="post" action="" id="uploadfile" enctype="multipart/form-data">
+            Hi <b><?php echo $this->session->userdata('username'); ?></b>
             <?php
-            }
-            else
-                echo 'fail';
-        ?>
+                if($this->session->userdata('permission')==1)
+                {
+                    ?>
+                        <a href="<?php echo base_url().'index.php/admin/create'; ?>">Create user</a>
+                        <a href="<?php echo base_url().'index.php/manage/manage'; ?>">Manage user</a>
+                    <?php
+                }
+            ?>
+            <a href="<?php echo base_url().'index.php/login/log/profile'; ?>">Profile</a>
+            <a href="<?php echo base_url().'index.php/login/log/logout'; ?>">Logout</a><br />
+            <b>Upload image</b><br />
+            <?php
+                if(isset($error))
+                {
+                    echo $error.'<br />';
+                }
+            ?>
+            File upload: <?php echo form_upload('ifile', 'Upload file'); ?><br />
+            <?php echo form_submit("upload", "Upload"); ?>
+        </form>
+        
     </body>
 </html>
