@@ -21,10 +21,10 @@ class Manage extends MX_Controller {
             parent::__construct();
             $this->load->library('form_validation');
             $this->load->database();
-            $this->load->helper(array('form', 'url'));
+            $this->load->helper(array('form', 'url','date'));
         }
          
-	public function index()
+	public function index($page = "1")
 	{
             if(!$this->session->userdata('islogin'))
             {
@@ -32,15 +32,62 @@ class Manage extends MX_Controller {
             }
             else
             {
-                if($this->session->userdata('permission')!=1)
+                if($this->session->userdata('permission')<1)
                 {
                     redirect(base_url().'index.php/login/log/profile', 'location');
                 }
                 else
                 {
+                    if($this->input->post('userid'))
+                    {
+                        $this->session->set_userdata('userid',$this->input->post('userid'));
+                        $this->session->set_userdata('choose',$this->input->post('choose'));
+                        redirect(base_url().'index.php/manage/manage/deleteoredit', 'location');
+                        
+                    }
+                    if($this->input->post('sort'))
+                    {
+                        if($this->input->post('sortby')=='Birthday')
+                        {
+                            $order = 'dob';
+                        }
+                        else
+                        {
+                            $order = $this->input->post('sortby');
+                        }
+                        $this->session->set_userdata('sortby',$order);
+                        redirect(base_url().'index.php/manage/manage/index', 'location');
+                    }
+                    else
+                    {
+                        if(!$this->session->userdata('sortby'))
+                        {
+                            $order = 'id';
+                        }
+                        else
+                        {
+                            $order = $this->session->userdata('sortby');
+                        }
+                    }
+                    $this->load->library('pagination');
+                    
+                    $page = (($page-1)*3);
                     $id = $this->session->userdata('id');
-                    $q = $this->db->query('select * from user where id<>'.$id);
-                    $data['list'] = $q->result();
+                    $permission = $this->session->userdata('permission');
+                    $this->load->model('user_model');
+                    $data['list'] = $this->user_model->get_list_user($id, $permission, $page, $order);
+                    
+                    $config['total_rows'] = $this->user_model->get_numrows_user($id, $permission);
+                    $config['base_url'] = base_url()."index.php/manage/manage/index";
+                    $config['per_page'] = 3;
+                    $config['use_page_numbers'] = TRUE;
+                    //$config['next_link'] = 'Next';
+                    
+                    
+                    $this->pagination->initialize($config);
+                    
+                    $data["pagination"] =  $this->pagination->create_links();
+                    
                     $this->load->view('list_view',$data);
                     
                 }
@@ -55,28 +102,55 @@ class Manage extends MX_Controller {
             }
             else
             {
-                if($this->session->userdata('permission')!=1)
+                if($this->session->userdata('permission')<1)
                 {
                     redirect(base_url().'index.php/login/log/profile', 'location');
                 }
                 else
                 {
-                    if($this->input->post('userid'))
+                    if($this->input->post('cancel'))
                     {
-                        $choose = $this->input->post('choose');
-                        $id = $this->input->post('userid');
+                        $this->session->unset_userdata('userid');
+                        $this->session->unset_userdata('choose');
+                        redirect(base_url().'index.php/manage/manage/manage', 'location');
+                    }
+                    if($this->session->userdata('userid'))
+                    {
+                        $this->load->model("user_model");
+                        $choose = $this->session->userdata('choose');
+                        $id = $this->session->userdata('userid');
                         if($choose == 'delete')
                         {
-                            $this->db->where('id', $id);
-                            $this->db->delete('user'); 
+                            $this->user_model->delete_user($id);
+                            $this->session->unset_userdata('choose');
+                            $this->session->unset_userdata('userid');
                             redirect(base_url().'index.php/manage/manage/manage', 'location');
-                            
                         }
                         else {
-                            //$q = $this->db->query("select * from user where id='$id'");
-                            //$data['user'] = $q->row();
-                            $this->session->set_userdata('idedit', $id);
-                            redirect(base_url().'index.php/manage/manage/edit', 'location');
+                            if(!$this->input->post('edit'))
+                            {
+                                $this->load->model('user_model');
+                                $data['user'] = $this->user_model->get_user_byid($id);
+                                $this->load->view('edit_view',$data);
+                            }
+                            else {
+                                $this->form_validation->set_rules('username','Username','trim|required');
+                                $this->form_validation->set_rules('password','Password','trim|required');
+                                $this->form_validation->set_rules('repassword','Re-enter password','trim|required|matches[password]');
+                                $this->form_validation->set_rules('email','Email','trim|required|valid_email');
+                                if($this->form_validation->run()==FALSE)
+                                {
+                                    $this->load->view('edit_view');
+                                }
+                                else
+                                {
+                                    $username = $this->input->post('username');
+                                    $password = $this->input->post('password');
+                                    $repassword = $this->input->post('repassword');
+                                    $email = $this->input->post('email');
+                                }
+                            }
+                            //redirect(base_url().'index.php/manage/manage/edit', 'location');
                         }
                     }
                     else {
