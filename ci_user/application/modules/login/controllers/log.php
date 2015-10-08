@@ -28,7 +28,7 @@ class Log extends MX_Controller {
 	{
             if($this->session->userdata("islogin"))
             {
-                
+                redirect(base_url().'index.php/login/log/profile', 'location');
             }
             else
             {
@@ -40,10 +40,10 @@ class Log extends MX_Controller {
                     {
                         $username = $this->input->post('username');
                         $password = md5($this->input->post('password'));
-                        $q = $this->db->query("select * from user where username = '$username' and password = '$password'");
-                        if($q->num_rows() == 1)
+                        $this->load->model('user_model');
+                        if($this->user_model->check_user($username, $password))
                         {
-                            $user = $q->row();
+                            $user = $this->user_model->get_user($username);
                             $this->session->set_userdata('islogin',1);
                             $this->session->set_userdata('id',$user->id);
                             $this->session->set_userdata('username',$user->username);
