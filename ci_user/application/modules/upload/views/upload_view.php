@@ -4,6 +4,7 @@
 	<meta charset="utf-8">
 	<title>Upload image</title>
         <script src="<?php echo base_url()?>public/js/jquery.min.js"></script>
+        <script src="<?php echo base_url()?>public/js/upload.js"></script>
 	<style type="text/css">
 
 	::selection{ background-color: #E13300; color: white; }
@@ -89,6 +90,5 @@
             File upload: <?php echo form_upload('ifile', 'Upload file'); ?><br />
             <?php echo form_submit("upload", "Upload"); ?>
         </form>
-        
     </body>
 </html>

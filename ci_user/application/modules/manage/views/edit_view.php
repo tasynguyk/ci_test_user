@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Sutrixmedia</title>
+<title>Sutrixmedia | Edit</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="">
 <meta name="author" content="">
@@ -49,6 +49,7 @@ body {
             <li><a href="javascipt:void(0)">Update profile</a></li>
             <?php if($this->session->userdata("permission")!=0)
             {
+                
                 ?>
                 <li class="nav-header">Admin Dashboard</li>
                 <li><a href="">Create user</a></li>
@@ -75,6 +76,10 @@ body {
     <fieldset>
         <?php
             echo validation_errors();
+            if(isset($error))
+            {
+              echo '<br />'.$error;
+            }
         ?>
       <div class="control-group">
         <label class="control-label">User ID</label>
@@ -109,7 +114,7 @@ body {
       <div class="control-group">
         <label class="control-label">Gender</label>
         <div class="controls">
-          <select class="span1">
+          <select class="span2" name="gender">
             <option value="1">Male</option>
             <option value="0">Female</option>
           </select>
@@ -118,7 +123,7 @@ body {
       <div class="control-group">
         <label class="control-label">Day of birth</label>
         <div class="controls">
-          <select class="span1">
+          <select class="span1" name="day">
             <option value="0">Day</option>
             <option value="1">1</option>
             <option value="2">2</option>
@@ -152,7 +157,7 @@ body {
             <option value="30">30</option>
             <option value="31">31</option>
           </select>
-          <select class="span1">
+          <select class="span1" name="month">
             <option value="0">Month</option>
             <option value="1">1</option>
             <option value="2">2</option>
@@ -167,7 +172,7 @@ body {
             <option value="11">11</option>
             <option value="12">12</option>
           </select>
-          <select class="span1">
+          <select class="span1" name="year">
             <option value="0">Year</option>
             <option value="2005">2005</option>
             <option value="2004">2004</option>
@@ -235,10 +240,10 @@ body {
       <div class="control-group">
         <label class="control-label">Permission</label>
         <div class="controls">
-          <select class="span1">
+          <select class="span2" name="permission">
                 <option value="0">User</option>
                 <option value="1">Admin</option>
-            <?php if($this->session->userdata('permisson')>1)
+            <?php if($this->session->userdata('permission')>1)
           {?>
                 <option value="2">Super admin</option>
           <?php } ?>
@@ -248,9 +253,9 @@ body {
       <div class="control-group">
         <label class="control-label">Status</label>
         <div class="controls">
-          <select class="span1">
-            <option>Public</option>
-            <option>Private</option>
+          <select class="span2" name="status">
+            <option value="1">Public</option>
+            <option value="0">Private</option>
           </select>
         </div>
       <div class="form-actions">

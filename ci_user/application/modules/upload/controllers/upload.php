@@ -56,6 +56,7 @@ class Upload extends MX_Controller {
                             rename($old, $new);
                             $data['error'] = 'Complete';
                         }
+                        echo $res['file_path'];
                         $this->load->view('upload_view',$data);
                 }
                 else
@@ -69,6 +70,36 @@ class Upload extends MX_Controller {
             }
             
 	}
+        
+        public function upload_img()
+        {
+            $config['upload_path'] = './uploads/';
+            $config['allowed_types'] = 'jpg';
+            $config['max_size'] = '6000';
+            $config['max_width'] = '1024';
+            $config['max_height'] = '768';
+            $config['encrypt_name'] = TRUE;
+            $this->load->library('upload', $config);
+
+
+            if(!$this->upload->do_upload('ifile'))
+            {
+                $data['error'] = $this->upload->display_errors();
+
+            }
+            else
+            {
+                $res = $this->upload->data();
+                $old = $res['full_path'];
+
+                $id = $this->session->userdata('id');
+
+                $new = $res['file_path'].$id.$res['file_ext'];
+                rename($old, $new);
+                $data['error'] = 'Complete';
+            }
+            $this->load->view('upload_view',$data);
+        }
 }
 
 /* End of file welcome.php */

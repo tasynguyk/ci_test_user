@@ -38,12 +38,36 @@ class Manage extends MX_Controller {
                 }
                 else
                 {
+                    $page = (($page-1)*3);
                     if($this->input->post('userid'))
                     {
                         $this->session->set_userdata('userid',$this->input->post('userid'));
                         $this->session->set_userdata('choose',$this->input->post('choose'));
                         redirect(base_url().'index.php/manage/manage/deleteoredit', 'location');
                         
+                    }
+                    //echo 'ok';
+                    $this->load->model('user_model');
+                    $id = $this->session->userdata('id');
+                    $permisson = $this->session->userdata('permission');    
+                    if($this->input->post('btncancel'))
+                    {
+                        $this->session->unset_userdata('search');
+                        $this->session->unset_userdata('sortby');
+                        redirect(base_url().'index.php/manage/manage', 'location');
+                    }
+                    if($this->input->post('btnsearch'))
+                    {
+                        if($this->input->post('txtsearch')!='')
+                        {
+                            redirect(base_url().'index.php/manage/manage/manage', 'location');
+                        }
+                        $search = $this->input->post('txtsearch');
+                        
+                        $this->session->set_userdata('search',$search);
+                        
+                        $list = $this->user_model->search_user($id, $permisson, $page, 'id', $search);
+                        $num_rows = $this->user_model->search_numrow_user($id, $permisson, $search);
                     }
                     if($this->input->post('sort'))
                     {
@@ -56,9 +80,20 @@ class Manage extends MX_Controller {
                             $order = $this->input->post('sortby');
                         }
                         $this->session->set_userdata('sortby',$order);
-                        redirect(base_url().'index.php/manage/manage/index', 'location');
+                        if($this->session->userdata('search'))
+                        {
+                            $search = $this->session->userdata('search');
+                            $list = $this->user_model->search_user($id, $permisson, $page, $order, $search);
+                            $num_rows = $this->user_model->search_numrow_user($id, $permisson, $search);
+                        }
+                        else
+                        {
+                            $list = $this->user_model->get_list_user($id, $permisson, $page, $order);
+                            $num_rows = $this->user_model->get_numrows_user($id, $permisson);
+                        }
                     }
-                    else
+                    
+                    if(!$this->input->post('sort') && !$this->input->post('btnsearch'))
                     {
                         if(!$this->session->userdata('sortby'))
                         {
@@ -68,25 +103,36 @@ class Manage extends MX_Controller {
                         {
                             $order = $this->session->userdata('sortby');
                         }
+                        if($this->session->userdata('search'))
+                        {
+                            $search = $this->session->userdata('search');
+                            
+                            $list = $this->user_model->search_user($id, $permisson, $page, $order, $search);
+                            $num_rows = $this->user_model->search_numrow_user($id, $permisson, $search);
+                        }
+                        else
+                        {
+                            $list = $this->user_model->get_list_user($id, $permisson, $page, $order);
+                            $num_rows = $this->user_model->get_numrows_user($id, $permisson);
+                        }
+                        
                     }
                     $this->load->library('pagination');
                     
-                    $page = (($page-1)*3);
-                    $id = $this->session->userdata('id');
-                    $permission = $this->session->userdata('permission');
-                    $this->load->model('user_model');
-                    $data['list'] = $this->user_model->get_list_user($id, $permission, $page, $order);
                     
-                    $config['total_rows'] = $this->user_model->get_numrows_user($id, $permission);
+                    $this->load->model('user_model');
+                    $data['list'] = $list;
+                    
+                    $config['total_rows'] = $num_rows;
                     $config['base_url'] = base_url()."index.php/manage/manage/index";
                     $config['per_page'] = 3;
                     $config['use_page_numbers'] = TRUE;
                     //$config['next_link'] = 'Next';
                     
-                    
                     $this->pagination->initialize($config);
                     
                     $data["pagination"] =  $this->pagination->create_links();
+                  //  $data['sortby'] = $order;
                     
                     $this->load->view('list_view',$data);
                     
@@ -94,6 +140,133 @@ class Manage extends MX_Controller {
             }
 	}
         
+        public function exportexcel()
+        {
+            $this->load->model('user_model');
+            $this->load->library('excel');
+            $objPHPExcel = new PHPExcel();
+            
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('A1', 'Username')
+                ->setCellValue('B1', 'Email')
+                ->setCellValue('C1', 'Birthday')
+                ->setCellValue('D1', 'Status')
+                ->setCellValue('E1', 'Gender')
+                ->setCellValue('F1', 'Permission')
+                ->setCellValue('G1', 'Company');
+                
+                $id = $this->session->userdata('id');
+                $permission = $this->session->userdata('permission');
+                
+                if(!$this->session->userdata('sortby'))
+                {
+                    $order = 'id';
+                }
+                else
+                {
+                    $order = $this->session->userdata('sortby');
+                }
+                
+                if(!$this->session->userdata('search'))
+                {
+                    $list = $this->user_model->get_listuser_nopage($id, $permission, $order);
+                }
+                else {
+                    $search = $this->session->userdata('search');
+                    $list = $this->user_model->search_user_nopage($id, $permission, $order, $search);
+                }
+                
+                $i = 2;
+                foreach ($list as $row)
+                {
+                    if($row->status==1)
+                    {
+                        $status = 'Public';
+                    }
+                    else
+                    {
+                        $status = 'Private';
+                    }
+                    
+                    if($row->permission==0)
+                    {
+                        $permission = 'User';
+                    }
+                    
+                    else
+                    {
+                        if($row->permission==1)
+                        {
+                            $permission = 'Admin';
+                        }
+                        else
+                        {
+                            $permission = 'Super admin';
+                        }
+                    }
+                    
+                    if($row->gender==0)
+                    {
+                        $gender = "Famale";
+                    }
+                    else
+                    {
+                        $gender = "Male";
+                    }
+                    
+                    $objPHPExcel->setActiveSheetIndex(0)
+                    ->setCellValue('A'.$i, $row->username)
+                    ->setCellValue('B'.$i, $row->email)
+                    ->setCellValue('C'.$i, $row->dob)
+                    ->setCellValue('D'.$i, $status)
+                    ->setCellValue('E'.$i, $gender)
+                    ->setCellValue('F'.$i, $permission)
+                    ->setCellValue('G'.$i, $row->name);
+                    $i++;
+                }
+                //ghi du lieu vao file,định dạng file excel 2007
+                $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+                $full_path = 'data.xlsx';//duong dan file
+                $objWriter->save($full_path);
+                redirect(base_url().'index.php/manage/manage/manage', 'location');
+        }
+        
+        public function exportpdf()
+        {
+            $id = $this->session->userdata('id');
+            $permission = $this->session->userdata('permission');
+            
+            $this->load->model('user_model');
+            
+            if(!$this->session->userdata('sortby'))
+            {
+                 $order = 'id';
+            }
+            else
+            {
+               $order = $this->session->userdata('sortby');
+            }
+                
+            if(!$this->session->userdata('search'))
+            {
+                $list = $this->user_model->get_listuser_nopage($id, $permission, $order);
+            }
+            else {
+                $search = $this->session->userdata('search');
+                $list = $this->user_model->search_user_nopage($id, $permission, $order, $search);
+            }
+            $data['list'] = $list;
+            $html = $this->load->view('pdf_view',$data,true);
+            
+                
+            $this->load->library('dompdf_gen');
+            $this->dompdf->load_html($html);
+            $this->dompdf->render();
+            $this->dompdf->stream("welcome.pdf",array('Attachment'=>0));
+        }
+
+        
+
         public function deleteoredit()
         {
             if(!$this->session->userdata('islogin'))
@@ -144,10 +317,50 @@ class Manage extends MX_Controller {
                                 }
                                 else
                                 {
-                                    $username = $this->input->post('username');
-                                    $password = $this->input->post('password');
-                                    $repassword = $this->input->post('repassword');
-                                    $email = $this->input->post('email');
+                                    $this->load->model('user_model');
+                                    $this->load->model('time_model');
+                                    $day = $this->input->post('day');
+                                    $month = $this->input->post('month');
+                                    $year = $this->input->post('year');
+
+                                    if(!$this->time_model->check_time($day,$month,$year))
+                                    {
+                                        $data['error'] = 'Day of birth valid';
+                                        $this->load->view('edit_view', $data);
+                                    }
+                                    else
+                                    {
+                                        $id = $this->session->userdata('userid');
+                                        $username = $this->input->post('username');
+                                        $password = md5($this->input->post('password'));
+                                        $email = $this->input->post('email');
+                                        $gender = $this->input->post('gender');
+                                        $permission = $this->input->post('permission');
+                                        $status = $this->input->post('status');
+                                        if(!$this->user_model->check_user_edit($id, $username, $email))
+                                        {
+                                            $data['error'] = 'Username or email has been used';
+                                            $this->load->view('edit_view',$data);
+                                        }
+                                        else
+                                        {
+                                            $dob = $year.'-'.$month.'-'.$day;
+                                            $update = array(
+                                            'username' => $username,
+                                            'password' => $password,
+                                            'email' => $email,
+                                            'gender' => $gender,
+                                            'permission' => $permission,
+                                            'status' => $status,
+                                            'dob' => $dob
+                                            );
+                                            //print_r($update);
+                                            $this->user_model->edit_user_byid($update, $id);
+                                            $this->session->unset_userdata('userid');
+                                            $this->session->unset_userdata('choose');
+                                            redirect(base_url().'index.php/manage/manage/manage', 'location');
+                                        }
+                                    }
                                 }
                             }
                             //redirect(base_url().'index.php/manage/manage/edit', 'location');
@@ -196,6 +409,7 @@ class Manage extends MX_Controller {
                                 $username = $this->input->post('username');
                                 $email = $this->input->post('email');
                                 $password = md5($this->input->post('password'));
+                                
                                 $q1 = $this->db->query("select * from user where username='$username' and id <>'$id'");
                                 $q2 = $this->db->query("select * from user where email='$email' and id <>'$id'");
                                // echo $q1->num_row()
