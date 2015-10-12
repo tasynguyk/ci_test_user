@@ -46,7 +46,7 @@ body {
       <ul class="nav pull-right">
         <li class="dropdown"> <a href="javascipt:void(0)" class="dropdown-toggle" data-toggle="dropdown">Dashboard<b class="caret"></b></a>
           <ul class="dropdown-menu">
-            <li><a href="javascipt:void(0)">Update profile</a></li>
+            <li><a href="<?php echo base_url().'index.php/ajax/ajax';?>">Update profile</a></li>
             <?php if($this->session->userdata("permission")!=0)
             {
                 ?>
@@ -62,83 +62,7 @@ body {
   </div>
 </div>
 <div class="container">
-<div class="row">
-  <div class="span12">
-    <h1>Dashboard<small> Welcome to Sutrixmedia Panel</small></h1>
-    <hr/>
-    <div class="hero-unit">
-      <h1>Hello, world!</h1>
-      <p>This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-      <p><a class="btn btn-primary btn-small">Learn more</a></p>
-    </div>
-    <hr/>
-    <div class="well">
-      <button type="button" class="close" data-dismiss="alert">×</button>
-      <h3>
-      Announcement
-      </h3>
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-     </div>
-  </div>
-  </div>
-  <h2>User Management</h2>
-  <table class="table table-bordered table-striped">
-      <tr>
-        <th>Full Name</th>
-        <th>Email</th>
-        <th>Birthday</th>
-        <th>Phone</th>
-        <th>City</th>
-        <th>Newsletters</th>
-        <th>Published</th>
-      </tr>
-      <tr>
-        <td><a href="details.html" title="Nguyen Van A">Nguyen Van A</a></td>
-        <td class="muted">None</td>
-        <td>10/10/1990</td>
-        <td>0123456789</td>
-        <td>Ho Chi Minh</td>
-        <td><input type="checkbox" id="chk-newsletter-1" value=""></td>
-        <td><input type="checkbox" id="chk-published-1" value=""></td>
-      </tr>
-      <tr>
-        <td><a href="details.html" title="Nguyen Van A">Nguyen Van A</a></td>
-        <td>nguyenvana@abc.com</td>
-        <td>10/10/1990</td>
-        <td>0123456789</td>
-        <td>Ho Chi Minh</td>
-        <td><input type="checkbox" id="chk-newsletter-2" value=""></td>
-        <td><input type="checkbox" id="chk-published-2" value=""></td>
-      </tr>
-      <tr>
-        <td><a href="details.html" title="Nguyen Van A">Nguyen Van A</a></td>
-        <td class="muted">None</td>
-        <td>10/10/1990</td>
-        <td>0123456789</td>
-        <td>Ho Chi Minh</td>
-        <td><input type="checkbox" id="chk-newsletter-3" value=""></td>
-        <td><input type="checkbox" id="chk-published-3" value=""></td>
-      </tr>
-      <tr>
-        <td><a href="details.html" title="Nguyen Van A">Nguyen Van A</a></td>
-        <td>nguyenvana@abc.com</td>
-        <td>10/10/1990</td>
-        <td>0123456789</td>
-        <td>Ho Chi Minh</td>
-        <td><input type="checkbox" id="chk-newsletter-4" value=""></td>
-        <td><input type="checkbox" id="chk-published-4" value=""></td>
-      </tr>
-      <tr>
-        <td><a href="details.html" title="Nguyen Van A">Nguyen Van A</a></td>
-        <td>nguyenvana@abc.com</td>
-        <td>10/10/1990</td>
-        <td>0123456789</td>
-        <td>Ho Chi Minh</td>
-        <td><input type="checkbox" id="chk-newsletter-5" value=""></td>
-        <td><input type="checkbox" id="chk-published-5" value=""></td>
-      </tr>                  
-  </table>
-  <hr/>
+    Avatar: <image src="<?php echo base_url().'uploads/'.$this->session->userdata('id'); ?>.jpg" width="100px" height="100px" />
   <footer>
     <p>&copy; SutrixMedia 2012</p>
   </footer>

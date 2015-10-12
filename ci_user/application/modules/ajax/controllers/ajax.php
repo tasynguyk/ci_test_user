@@ -44,7 +44,7 @@ class Ajax extends MX_Controller {
                     $sourcePath = $_FILES['userImage']['tmp_name'];
                     $targetPath = "uploads/".$_FILES['userImage']['name'];
                     if(move_uploaded_file($sourcePath,$targetPath)) {
-                        $ret = "<img src='".$targetPath."' width='100px' height='100px' />";
+                        $ret = "<img src='".base_url().$targetPath."' width='100px' height='100px' />";
                         echo $ret;
                     }
                 }
