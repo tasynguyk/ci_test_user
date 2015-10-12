@@ -29,7 +29,7 @@ body {
 <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 <script type="text/javascript">
 $(document).ready(function (e) {
-	$("#uploadForm").on('submit',(function(e) {
+	$("#uploadForm").on('change',(function(e) {
 		e.preventDefault();
 		$.ajax({
         	url: "<?php echo base_url().'index.php/ajax/ajax/xuly';?>",
@@ -96,7 +96,7 @@ $(document).ready(function (e) {
   </div>
   </div>
   <h2>Upload Image</h2>
-  <form class="form-horizontal well" method="post" action="" id="uploadForm">
+  <form class="form-horizontal well" method="post" action="<?php echo base_url().'index.php/ajax/ajax/upload_img'; ?>" id="uploadForm" enctype="multipart/form-data">
     <fieldset>
         <?php
             echo validation_errors();
@@ -109,7 +109,7 @@ $(document).ready(function (e) {
         <div class="control-group">
         <label class="control-label" for="fileInput">File input</label>
         <div class="controls">
-          <input class="input-file" id="userImage" type="file" name="userImage">
+          <input class="input-file" type="file" name="userImage">
         </div>
         
       </div>
@@ -121,8 +121,7 @@ $(document).ready(function (e) {
         
       </div>
         <div class="form-actions">
-            <input type="submit" value="Upload" class="btnSubmit" id="upload" />
-            <input type="submit" value="Change" class="btnSubmit" name="change"/>
+            <input type="submit" value="Upload" class="btnSubmit" name="upload" />
       </div>
     </fieldset>
   </form>
