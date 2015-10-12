@@ -21,7 +21,7 @@ class Manage extends MX_Controller {
             parent::__construct();
             $this->load->library('form_validation');
             $this->load->database();
-            $this->load->helper(array('form', 'url','date'));
+            $this->load->helper(array('form', 'url','date','download'));
         }
          
 	public function index($page = "1")
@@ -58,14 +58,14 @@ class Manage extends MX_Controller {
                     }
                     if($this->input->post('btnsearch'))
                     {
-                        if($this->input->post('txtsearch')!='')
+                        if($this->input->post('txtsearch')=='')
                         {
                             redirect(base_url().'index.php/manage/manage/manage', 'location');
                         }
                         $search = $this->input->post('txtsearch');
                         
                         $this->session->set_userdata('search',$search);
-                        
+                      //  echo 'ok';
                         $list = $this->user_model->search_user($id, $permisson, $page, 'id', $search);
                         $num_rows = $this->user_model->search_numrow_user($id, $permisson, $search);
                     }
@@ -142,93 +142,106 @@ class Manage extends MX_Controller {
         
         public function exportexcel()
         {
-            $this->load->model('user_model');
-            $this->load->library('excel');
-            $objPHPExcel = new PHPExcel();
-            
-            $objPHPExcel->setActiveSheetIndex(0)
-                ->setCellValue('A1', 'Username')
-                ->setCellValue('B1', 'Email')
-                ->setCellValue('C1', 'Birthday')
-                ->setCellValue('D1', 'Status')
-                ->setCellValue('E1', 'Gender')
-                ->setCellValue('F1', 'Permission')
-                ->setCellValue('G1', 'Company');
-                
-                $id = $this->session->userdata('id');
-                $permission = $this->session->userdata('permission');
-                
-                if(!$this->session->userdata('sortby'))
-                {
-                    $order = 'id';
-                }
-                else
-                {
-                    $order = $this->session->userdata('sortby');
-                }
-                
-                if(!$this->session->userdata('search'))
-                {
-                    $list = $this->user_model->get_listuser_nopage($id, $permission, $order);
-                }
-                else {
-                    $search = $this->session->userdata('search');
-                    $list = $this->user_model->search_user_nopage($id, $permission, $order, $search);
-                }
-                
-                $i = 2;
-                foreach ($list as $row)
-                {
-                    if($row->status==1)
+            if($this->session->userdata('islogin'))
+            {
+                $this->load->model('user_model');
+                $this->load->library('excel');
+                $objPHPExcel = new PHPExcel();
+
+                $objPHPExcel->setActiveSheetIndex(0)
+                    ->setCellValue('A1', 'Username')
+                    ->setCellValue('B1', 'Email')
+                    ->setCellValue('C1', 'Birthday')
+                    ->setCellValue('D1', 'Status')
+                    ->setCellValue('E1', 'Gender')
+                    ->setCellValue('F1', 'Permission')
+                    ->setCellValue('G1', 'Company');
+
+                    $id = $this->session->userdata('id');
+                    $permission = $this->session->userdata('permission');
+
+                    if(!$this->session->userdata('sortby'))
                     {
-                        $status = 'Public';
+                        $order = 'id';
                     }
                     else
                     {
-                        $status = 'Private';
+                        $order = $this->session->userdata('sortby');
                     }
-                    
-                    if($row->permission==0)
+
+                    if(!$this->session->userdata('search'))
                     {
-                        $permission = 'User';
+                        $list = $this->user_model->get_listuser_nopage($id, $permission, $order);
                     }
-                    
-                    else
+                    else {
+                        $search = $this->session->userdata('search');
+                        $list = $this->user_model->search_user_nopage($id, $permission, $order, $search);
+                    }
+
+                    $i = 2;
+                    foreach ($list as $row)
                     {
-                        if($row->permission==1)
+                        if($row->status==1)
                         {
-                            $permission = 'Admin';
+                            $status = 'Public';
                         }
                         else
                         {
-                            $permission = 'Super admin';
+                            $status = 'Private';
                         }
+
+                        if($row->permission==0)
+                        {
+                            $permission = 'User';
+                        }
+
+                        else
+                        {
+                            if($row->permission==1)
+                            {
+                                $permission = 'Admin';
+                            }
+                            else
+                            {
+                                $permission = 'Super admin';
+                            }
+                        }
+
+                        if($row->gender==0)
+                        {
+                            $gender = "Famale";
+                        }
+                        else
+                        {
+                            $gender = "Male";
+                        }
+
+                        $objPHPExcel->setActiveSheetIndex(0)
+                        ->setCellValue('A'.$i, $row->username)
+                        ->setCellValue('B'.$i, $row->email)
+                        ->setCellValue('C'.$i, $row->dob)
+                        ->setCellValue('D'.$i, $status)
+                        ->setCellValue('E'.$i, $gender)
+                        ->setCellValue('F'.$i, $permission)
+                        ->setCellValue('G'.$i, $row->name);
+                        $i++;
                     }
+                    //ghi du lieu vao file,định dạng file excel 2007
+                    $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
                     
-                    if($row->gender==0)
-                    {
-                        $gender = "Famale";
-                    }
-                    else
-                    {
-                        $gender = "Male";
-                    }
+                    $id = $this->session->userdata('id');
+                    $username = $this->session->userdata('username');
                     
-                    $objPHPExcel->setActiveSheetIndex(0)
-                    ->setCellValue('A'.$i, $row->username)
-                    ->setCellValue('B'.$i, $row->email)
-                    ->setCellValue('C'.$i, $row->dob)
-                    ->setCellValue('D'.$i, $status)
-                    ->setCellValue('E'.$i, $gender)
-                    ->setCellValue('F'.$i, $permission)
-                    ->setCellValue('G'.$i, $row->name);
-                    $i++;
-                }
-                //ghi du lieu vao file,định dạng file excel 2007
-                $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-                $full_path = 'data.xlsx';//duong dan file
-                $objWriter->save($full_path);
-                redirect(base_url().'index.php/manage/manage/manage', 'location');
+                    $full_path = $id.'.xlsx';//duong dan file
+                    $objWriter->save($full_path);
+                    $data_download =  file_get_contents($id.'.xlsx');
+                    force_download($username.'_manage.xlsx', $data_download);
+                    redirect(base_url().'index.php/manage/manage/manage', 'location');
+            }
+            else
+            {
+                redirect(base_url().'index.php/login/log', 'location');
+            }
         }
         
         public function exportpdf()
