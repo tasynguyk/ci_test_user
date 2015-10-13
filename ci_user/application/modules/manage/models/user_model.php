@@ -8,11 +8,60 @@ class user_model extends CI_Model
         parent::__construct();
     }
     
+    public function get_lang()
+    {
+        if($this->session->userdata('lang'))
+        {
+            if($this->session->userdata('lang')=='english')
+            {
+                return 'en_name';
+            }
+            return 'vi_name';
+        }
+        return 'en_name';
+    }
+            
     function get_list_user($id, $permisson, $page, $order)
     {
-        $q = $this->db->query("select * from user where id<>'$id' and "
-                . "permission<$permisson order by $order limit $page,3");
+        $lang_use = $this->get_lang();
+        $q = $this->db->query("select user.id, user.username, user.email, user.dob, user.status, user.gender, user.permission, company.$lang_use as 'name' "
+                . "from user, company where user.id<>'$id' and "
+                . "permission<$permisson and user.companyid=company.company_id order by $order limit $page,3");
         return $q->result();
+    }
+    
+    function get_listuser_nopage($id, $permisson, $order)
+    {
+        $q = $this->db->query("select user.id, user.username, user.email, user.dob, user.status, user.gender, user.permission, company.name "
+                . "from user, company where user.id<>'$id' and "
+                . "permission<$permisson and user.companyid=company.id order by $order");
+        return $q->result();
+    }
+    
+    
+    function search_user_nopage($id, $permisson,  $order, $search)
+    {
+        $q = $this->db->query("select user.id, user.username, user.email, user.dob, user.status, user.gender, user.permission, company.name "
+                . "from user, company where user.id<>'$id' and username like '%$search%' and "
+                . "permission<$permisson and user.companyid=company.id order by $order");
+        return $q->result();
+    }
+    
+    function search_user($id, $permisson, $page, $order, $search)
+    {
+        $lang_use = $this->get_lang();
+        $q = $this->db->query("select user.id, user.username, user.email, user.dob, user.status, user.gender, user.permission, company.$lang_use as 'name' "
+                . "from user, company where user.id<>'$id' and username like '%$search%' and "
+                . "permission<$permisson and user.companyid=company.company_id order by $order limit $page,3");
+        return $q->result();
+    }
+    
+    function search_numrow_user($id, $permisson, $search)
+    {
+        $q = $this->db->query("select * from user where id<>'$id' and "
+                . "permission<$permisson and username like '%$search%'");
+        
+        return $q->num_rows();
     }
     
     function  get_user_byid($id)
@@ -32,6 +81,27 @@ class user_model extends CI_Model
     {
         $this->db->where('id', $id);
         $this->db->delete('user'); 
+    }
+
+    function check_user_edit($id, $username, $email)
+    {
+        $q1 = $this->db->query("select * from user where username='$username' and id <>'$id'");
+        $q2 = $this->db->query("select * from user where email='$email' and id <>'$id'");
+        if($q1->num_rows()+$q2->num_rows()>0)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    
+    
+    function edit_user_byid($data, $id)
+    {
+        $this->db->where('id',$id);
+        $this->db->update('user',$data);
     }
 }
  
