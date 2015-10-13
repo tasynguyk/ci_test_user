@@ -8,9 +8,8 @@ class page_model extends CI_Model
         parent::__construct();
     }
     
-    public function create_page($config, $page)
+    public function create_page($config)
     {
-        $num_page = $config['total_row']/$config['item_per_page'];
         if($config['total_row']%$config['item_per_page']==0)
         {
             $num_page = $config['total_row']/$config['item_per_page'];
@@ -23,9 +22,14 @@ class page_model extends CI_Model
         for($i=1;$i<=$num_page;$i++)
         {
             if($i!=$config['curpage'])
-                $ret+= "<a href='".$config['url']."/".$i."'>".$i.'</a>';
+            {
+                $ret .= "<a href='".$config['url']."/".$i."'>".$i.'</a> ';
+               // echo $ret;
+            }
             else
-                $i;
+            {
+                $ret .= $i.' ';
+            }
         }
         return $ret;
     }

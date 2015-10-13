@@ -22,6 +22,16 @@ class Create extends MX_Controller {
             $this->load->library('form_validation');
             $this->load->database();
             $this->load->helper(array('form', 'url'));
+            if($this->session->userdata('lang'))
+            {
+                $lang_use = $this->session->userdata('lang');
+                $this->lang->load('form',$lang_use);
+                $this->lang->load('form_validation',$lang_use);
+            }
+            else
+            {
+                $this->lang->load('form','vietnamese');
+            }
         }
          
 	public function index()
@@ -39,16 +49,19 @@ class Create extends MX_Controller {
                 else
                 {
                     $this->load->model('user_model');
+                    $this->load->model('company_model');
+                    
+                  //  $data[]
                     
                     if($this->input->post('create'))
                     {
-                        $this->form_validation->set_rules('username','Username','trim|required');
-                        $this->form_validation->set_rules('password','Password','trim|required');
-                        $this->form_validation->set_rules('repassword','Re-enter password','trim|required|matches[password]');
-                        $this->form_validation->set_rules('email','Email','trim|required|valid_email');
+                        $this->form_validation->set_rules('username',$this->lang->line('username'),'trim|required');
+                        $this->form_validation->set_rules('password',$this->lang->line('password'),'trim|required');
+                        $this->form_validation->set_rules('repassword',$this->lang->line('repassword'),'trim|required|matches[password]');
+                        $this->form_validation->set_rules('email',$this->lang->line('email'),'trim|required|valid_email');
                         if($this->form_validation->run()==FALSE)
                         {
-                            $this->load->view('create_view');
+                            $data['page_content'] = $this->load->view('create_view','',true);
                         }
                         else
                         {
@@ -60,22 +73,22 @@ class Create extends MX_Controller {
                             
                             if(!$this->time_model->check_time($day,$month,$year))
                             {
-                                $data['error'] = 'Day of birth valid';
-                                $this->load->view('create_view', $data);
+                                $data['error'] = $this->lang->line('dob_valid');
+                                $data['page_content'] = $this->load->view('create_view',$data,true);
                             }
                             else
                             {
-                                
                                 $username = $this->input->post('username');
                                 $password = md5($this->input->post('password'));
                                 $email = $this->input->post('email');
                                 $gender = $this->input->post('gender');
                                 $permission = $this->input->post('permisson');
                                 $status = $this->input->post('status');
+                                $companyid = $this->input->post('companyid');
                                 if(!$this->user_model->check_user($username, $email))
                                 {
-                                    $data['error'] = 'Username or email has been used';
-                                    $this->load->view('create_view',$data);
+                                    $data['error'] = $this->lang->line('username_email_use');
+                                    $data['page_content'] = $this->load->view('create_view',$data,true);
                                 }
                                 else 
                                 {
@@ -87,23 +100,69 @@ class Create extends MX_Controller {
                                         'gender' => $gender,
                                         'permission' => $permission,
                                         'status' => $status,
-                                        'dob' => $dob
+                                        'dob' => $dob,
+                                        'companyid' => $companyid
                                     );
                                     $this->user_model->add_user($create);
                                     $data['error'] = 'Complete.';
-                                    $this->load->view('create_view',$data);
                                 }
+                                //data['page_title'] =  
+                                $data['page_sub_title'] = $this->lang->line('create_user');
                             }
                         }
                         
                     }
-                    else {
-                        $this->load->view('create_view');
-                    }
-                    
+                    $data['list_company'] = $this->company_model->get_company();
+                    $data['page_sub_title'] = $this->lang->line('create_user');
+                    $data['page_content'] = $this->load->view('create_view',$data,true);
+                    $this->load->view('master_layout',$data);
                 }
             }
 	}
+
+
+
+        public function company()
+        {
+            if(!$this->session->userdata('islogin'))
+            {
+                redirect(base_url().'index.php/login/log','location');
+            }
+            else
+            {
+                if($this->session->userdata('permission')<1)
+                {
+                    redirect(base_url().'index.php/login/log/profile','location');
+                }
+                else
+                {
+                    $this->load->model('company_model');
+                    if($this->input->post('create'))
+                    {
+                        $this->form_validation->set_rules('en_name',$this->lang->line('company_name_en'),'trim|required');
+                        $this->form_validation->set_rules('vi_name',$this->lang->line('company_name_vi'),'trim|required');
+                        if($this->form_validation->run()!=FALSE)
+                        {
+                            $en_name = $this->input->post('en_name');
+                            $vi_name = $this->input->post('vi_name');
+                            if(!$this->company_model->check_name_company($en_name, $vi_name))
+                            {
+                                $data['error'] = $this->lang->line('company_name_use');
+                            }
+                            else
+                            {
+                                $this->company_model->insert_company($en_name, $vi_name);
+                                $data['error'] = $this->lang->line('compele');
+                            }
+                        }
+                    }
+                    
+                    $data['page_sub_title'] = $this->lang->line('create_company');
+                    $data['page_content'] = $this->load->view('create_company_view',$data,true);
+                    $this->load->view('master_layout',$data);
+                }
+            }
+        }
        
 }
 
