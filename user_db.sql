@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Oct 09, 2015 at 06:55 PM
+-- Generation Time: Oct 13, 2015 at 05:16 PM
 -- Server version: 5.5.44-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.13
 
@@ -27,19 +27,21 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE IF NOT EXISTS `company` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) CHARACTER SET utf8 NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+  `company_id` int(11) NOT NULL AUTO_INCREMENT,
+  `vi_name` varchar(40) CHARACTER SET utf8 NOT NULL,
+  `en_name` varchar(40) CHARACTER SET utf8 NOT NULL,
+  PRIMARY KEY (`company_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 --
 -- Dumping data for table `company`
 --
 
-INSERT INTO `company` (`id`, `name`) VALUES
-(1, 'Valve'),
-(2, 'EA'),
-(3, 'Nexon');
+INSERT INTO `company` (`company_id`, `vi_name`, `en_name`) VALUES
+(1, 'Đại Hàn', 'Korea'),
+(2, 'Nhật Bản', 'Japan'),
+(3, 'Mỹ', 'USA'),
+(4, 'Mã Lai Á', 'Malaysia');
 
 -- --------------------------------------------------------
 
@@ -70,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `gender` tinyint(1) DEFAULT NULL,
   `companyid` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
 
 --
 -- Dumping data for table `user`
@@ -78,14 +80,13 @@ CREATE TABLE IF NOT EXISTS `user` (
 
 INSERT INTO `user` (`id`, `username`, `password`, `email`, `permission`, `dob`, `status`, `gender`, `companyid`) VALUES
 (1, 'sangnguyen', 'e10adc3949ba59abbe56e057f20f883e', 'sang.nguyen@gmail.com', 2, '1992-12-25', 1, 1, 1),
-(2, 'admin', '123', 'admin@mail.com', 1, '1990-12-25', 0, 1, 1),
-(4, 'tasytest', '123', 'tasymaster@gmail.com', 0, '1983-07-02', 0, 1, 2),
-(5, 'user2', '202cb962ac59075b964b07152d234b70', 'tzz@gmail.com', 0, '1995-09-05', 1, 1, 3),
+(5, 'user2', '202cb962ac59075b964b07152d234b70', 'tzz@gmail.com', 0, '2005-03-01', 1, 1, 3),
 (7, 'ausertest1', '123456', 'usertest1@mail.com', 0, '1995-09-20', 1, 1, 2),
 (8, 'usertest2', '202cb962ac59075b964b07152d234b70', 'usertest2@mail.com', 1, '1997-05-03', 1, 1, 1),
-(9, 'usertest3', 'c4ca4238a0b923820dcc509a6f75849b', 'usertest@mail.com', 1, '1998-04-02', 1, 1, 1),
+(9, 'usertest3', '202cb962ac59075b964b07152d234b70', 'usertest@mail.com', 0, '2000-06-04', 1, 1, 4),
 (10, 'usertest4', 'usertest', 'usertest4@mail.com', 0, '1990-12-25', 1, 1, 1),
-(11, 'root', 'e10adc3949ba59abbe56e057f20f883e', 'root@gmail.com', 0, '2004-02-02', 1, 1, 2);
+(11, 'root', 'e10adc3949ba59abbe56e057f20f883e', 'root@gmail.com', 0, '2004-02-02', 1, 1, 2),
+(12, 'kira', '202cb962ac59075b964b07152d234b70', 'kira@light.com', 0, '2000-03-03', 1, 1, 2);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
