@@ -85,8 +85,24 @@
         </td>
         <td><?php echo $l->name; ?></td>
         <td>
-            <input type="button" value="<?php echo $this->lang->line('delete');?>" class="btn btn-primary btn-small" onclick="get(<?php echo $l->id;?>,'delete')" />
-            <input type="button" value="<?php echo $this->lang->line('edit');?>" class="btn btn-primary btn-small" onclick="get(<?php echo $l->id;?>,'edit')" />
+            <?php
+                $id = $this->session->userdata('id');
+                if($this->acl->can_delete($id,1))
+                {
+                    ?>
+                    <input type="button" value="<?php echo $this->lang->line('delete');?>" class="btn btn-primary btn-small" onclick="get(<?php echo $l->id;?>,'delete')" />
+                    <?php
+                }
+            ?>
+            <?php
+                $id = $this->session->userdata('id');
+                if($this->acl->can_edit($id,1))
+                {
+                    ?>
+                    <input type="button" value="<?php echo $this->lang->line('edit');?>" class="btn btn-primary btn-small" onclick="get(<?php echo $l->id;?>,'edit')" />
+                    <?php
+                }
+            ?>
         </td>
       </tr>
         <?php

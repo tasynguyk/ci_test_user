@@ -19,7 +19,7 @@ class Manage extends MX_Controller {
 	 */
          public function __construct() {
             parent::__construct();
-            $this->load->library('form_validation');
+            $this->load->library(array('form_validation','Acl'));
             $this->load->database();
             $this->load->helper(array('form', 'url','date','download','file'));
             if($this->session->userdata('lang'))
@@ -42,7 +42,9 @@ class Manage extends MX_Controller {
             }
             else
             {
-                if($this->session->userdata('permission')<1)
+                $resource = 1;
+                $user_id = $this->session->userdata('id');
+                if(!$this->acl->can_view($user_id, $resource))
                 {
                     redirect(base_url().'index.php/login/log/profile', 'location');
                 }
@@ -333,7 +335,8 @@ class Manage extends MX_Controller {
             }
             else
             {
-                if($this->session->userdata('permission')<1)
+                $id = $this->session->userdata('id');
+                if(!$this->acl->can_view($id, 2))
                 {
                     redirect(base_url().'index.php/login/log/profile', 'location');
                 }
@@ -446,7 +449,8 @@ class Manage extends MX_Controller {
             }
             else
             {
-                if($this->session->userdata('permission')<1)
+                $id_user = $this->session->userdata('id');
+                if(!$this->acl->can_view($id_user, 2))
                 {
                     redirect(base_url().'index.php/login/log/profile', 'location');
                 }
@@ -465,7 +469,7 @@ class Manage extends MX_Controller {
                         
                         $choose = $this->session->userdata('companychoose');
                         $id = $this->session->userdata('companyid');
-                        if($choose == 'delete')
+                        if($choose == 'delete' && $this->acl->can_delete($id_user, 2))
                         {
                             if($this->company_model->check_delete_company($id))
                             {
@@ -474,14 +478,9 @@ class Manage extends MX_Controller {
                             redirect(base_url().'index.php/manage/manage/company', 'location');
                         }
                         else {
-                            if(!$this->input->post('edit'))
+                            if($this->input->post('edit'))
                             {
-                                
-                               // $this->load->view('master_layout',$data);
-                            }
-                            else 
-                            {
-                                if($this->input->post('edit'))
+                                if($this->input->post('edit') && $this->acl->can_edit($id_user, 2))
                                 {
                                     $this->form_validation->set_rules('en_name',$this->lang->line('company_name_en'),'trim|required');
                                     $this->form_validation->set_rules('vi_name',$this->lang->line('company_name_vi'),'trim|required');
@@ -530,7 +529,9 @@ class Manage extends MX_Controller {
             }
             else
             {
-                if($this->session->userdata('permission')<1)
+                $resource = 2;
+                $user_id = $this->session->userdata('id');
+                if(!$this->acl->can_view($user_id, $resource))
                 {
                     redirect(base_url().'index.php/login/log/profile', 'location');
                 }

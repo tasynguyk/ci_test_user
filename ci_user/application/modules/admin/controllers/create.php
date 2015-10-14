@@ -19,7 +19,7 @@ class Create extends MX_Controller {
 	 */
          public function __construct() {
             parent::__construct();
-            $this->load->library('form_validation');
+            $this->load->library(array('form_validation','Acl'));
             $this->load->database();
             $this->load->helper(array('form', 'url'));
             if($this->session->userdata('lang'))
@@ -42,7 +42,9 @@ class Create extends MX_Controller {
             }
             else
             {
-                if($this->session->userdata('permission')<1)
+                $id = $this->session->userdata('id');
+                $resource = 1;
+                if(!$this->acl->can_create($id, $resource))
                 {
                     redirect(base_url().'index.php/login/log/profile', 'location');
                 }
@@ -131,9 +133,11 @@ class Create extends MX_Controller {
             }
             else
             {
-                if($this->session->userdata('permission')<1)
+                $id = $this->session->userdata('id');
+                $resource = 2;
+                if(!$this->acl->can_create($id, $resource))
                 {
-                    redirect(base_url().'index.php/login/log/profile','location');
+                    redirect(base_url().'index.php/login/log/profile', 'location');
                 }
                 else
                 {
