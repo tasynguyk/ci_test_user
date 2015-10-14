@@ -164,7 +164,7 @@ class Manage extends MX_Controller {
                     
                     $data['page_content'] = $this->load->view('list_view',$data,true);
                     $data['page_sub_title'] = $this->lang->line('manage_user');
-                    $data['page_title'] = "Sutrix media | Manage user";
+                    $data['page_title'] = "Sutrix media | ".$this->lang->line('manage_user');
                     $data['page_js'] = $this->load->view('js/edit_js_view');
                     $this->load->view('master_layout', $data);
                     
@@ -424,7 +424,7 @@ class Manage extends MX_Controller {
                                     }
                             }
                             $data['list_company'] = $this->company_model->get_company_list();
-                            $data['page_title'] = '';
+                            $data['page_title'] = $data['page_title'] = "Sutrix media | ".$this->lang->line('edit_user');
                             $data['page_sub_title'] = $this->lang->line('edit_user');
                             $data['page_content'] = $this->load->view('edit_view',$data,true);
                             $this->load->view('master_layout',$data);
@@ -508,7 +508,7 @@ class Manage extends MX_Controller {
                             }
                             $data['company'] = $this->company_model->get_company_byid($id);
                             $data['list_company'] = $this->company_model->get_company_list();
-                            $data['page_title'] = '';
+                            $data['page_title'] = $data['page_title'] = "Sutrix media | ".$this->lang->line('edit_company');
                             $data['page_sub_title'] = $this->lang->line('edit_company');
                             $data['page_content'] = $this->load->view('edit_company_view',$data,true);
                             $this->load->view('master_layout',$data);
@@ -593,7 +593,7 @@ class Manage extends MX_Controller {
                     
                     $data["pagination"] =  $this->page_model->create_page($z);
                    
-                    $data['page_title'] = "Sutrix media | Manage company";
+                    $data['page_title'] = "Sutrix media | ".$this->lang->line('manage_company');
                     $data['page_js'] = $this->load->view('js/company_js_view');
                     
                     $data['page_content'] = $this->load->view('company_view',$data,true);

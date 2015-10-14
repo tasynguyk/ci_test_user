@@ -112,6 +112,7 @@ class Create extends MX_Controller {
                         }
                         
                     }
+                    $data['page_title'] = 'Sutrix media | '.$this->lang->line('create_user');
                     $data['list_company'] = $this->company_model->get_company();
                     $data['page_sub_title'] = $this->lang->line('create_user');
                     $data['page_content'] = $this->load->view('create_view',$data,true);
@@ -156,7 +157,7 @@ class Create extends MX_Controller {
                             }
                         }
                     }
-                    
+                    $data['page_title'] = 'Sutrix media | '.$this->lang->line('create_company');
                     $data['page_sub_title'] = $this->lang->line('create_company');
                     $data['page_content'] = $this->load->view('create_company_view',$data,true);
                     $this->load->view('master_layout',$data);

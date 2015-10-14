@@ -43,6 +43,7 @@ class Ajax extends MX_Controller {
             else
             {
                 $data['page_sub_title'] = $this->lang->line('up_img');
+                $data['page_title'] = 'Sutrixmedia | '.$this->lang->line('up_img');
                 $data['page_content'] = $this->load->view('index_view','',true);
                 $data['page_js'] = $this->load->view('js/ajax_js_view','',true);
                 $this->load->view('master_layout',$data);
