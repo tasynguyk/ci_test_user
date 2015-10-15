@@ -36,7 +36,7 @@ class Acl {
                     . " group_resource.create=1";
             return $this->ci->db->query($sql)->num_rows()>0?TRUE:FALSE;
         }
-        
+            
         public function can_delete($id, $resource)
         {
             //$this->load->database();

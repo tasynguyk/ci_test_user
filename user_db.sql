@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Oct 14, 2015 at 05:22 PM
+-- Generation Time: Oct 15, 2015 at 06:04 PM
 -- Server version: 5.5.44-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.13
 
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `company` (
   `vi_name` varchar(40) CHARACTER SET utf8 NOT NULL,
   `en_name` varchar(40) CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`company_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 --
 -- Dumping data for table `company`
@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `group` (
   `name` varchar(45) CHARACTER SET utf8 NOT NULL,
   `description` varchar(250) CHARACTER SET utf8 DEFAULT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
 
 --
 -- Dumping data for table `group`
@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS `group_resource` (
   `edit` tinyint(1) NOT NULL,
   `delete` tinyint(1) NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
 
 --
 -- Dumping data for table `group_resource`
@@ -90,8 +90,10 @@ INSERT INTO `group_resource` (`ID`, `groupID`, `resourceID`, `create`, `edit`, `
 (1, 1, 1, 1, 1, 1),
 (2, 2, 2, 1, 1, 1),
 (3, 1, 2, 1, 1, 1),
-(4, 3, 2, 1, 0, 0),
-(5, 4, 1, 0, 1, 0);
+(4, 3, 2, 1, 0, 1),
+(5, 4, 1, 1, 1, 0),
+(6, 1, 3, 1, 1, 1),
+(7, 1, 4, 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -173,7 +175,7 @@ CREATE TABLE IF NOT EXISTS `user_group` (
   `userID` int(11) NOT NULL,
   `groupID` int(11) NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
 
 --
 -- Dumping data for table `user_group`
@@ -183,7 +185,7 @@ INSERT INTO `user_group` (`ID`, `userID`, `groupID`) VALUES
 (1, 1, 1),
 (2, 11, 3),
 (3, 12, 2),
-(4, 13, 4);
+(7, 13, 4);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

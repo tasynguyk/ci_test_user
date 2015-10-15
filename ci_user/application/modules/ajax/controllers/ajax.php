@@ -29,7 +29,7 @@ class Ajax extends MX_Controller {
             }
             else
             {
-                $this->lang->load('form','vietnamese');
+                $this->lang->load('form','english');
             }
 
         }
@@ -47,9 +47,7 @@ class Ajax extends MX_Controller {
                 $data['page_content'] = $this->load->view('index_view','',true);
                 $data['page_js'] = $this->load->view('js/ajax_js_view','',true);
                 $this->load->view('master_layout',$data);
-                        
             }
-            
 	}
         
         public function xuly()

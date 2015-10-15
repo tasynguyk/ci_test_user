@@ -22,7 +22,7 @@
         <div class="control-group">
         <label class="control-label"><?php echo $this->lang->line('password'); ?></label>
         <div class="controls">
-            <input class="span3" name="password" type="password" placeholder="<?php echo $this->lang->line('password'); ?>">
+            <input class="span3" name="password" type="password"  placeholder="<?php echo $this->lang->line('password'); ?>">
         </div>
       </div>
         <div class="control-group">
@@ -50,10 +50,11 @@
         <label class="control-label"><?php echo $this->lang->line('dob'); ?></label>
         <div class="controls">
           <select class="span1" name="day">
+              <?php $time = explode("-", $user->dob); ?>
             <option value="0"><?php echo $this->lang->line('day'); ?></option>
             <?php for($i=1;$i<=31;$i++)
             {?>
-            <option value="<?php echo $i; ?>">
+            <option value="<?php echo $i; ?>"<?php if($i==$time[2]) echo ' selected '; ?>>
                     <?php echo $i; ?>
                 </option>
             <?php
@@ -63,7 +64,7 @@
             <option value="0"><?php echo $this->lang->line('month'); ?></option>
             <?php for($i=1;$i<=12;$i++)
             {?>
-            <option value="<?php echo $i; ?>">
+            <option value="<?php echo $i; ?>"<?php if($i==$time[1]) echo ' selected '; ?>>
                     <?php echo $i; ?>
                 </option>
             <?php
@@ -73,7 +74,7 @@
             <option value="0"><?php echo $this->lang->line('year'); ?></option>
             <?php for($i=2005;$i>=1951;$i--)
             {?>
-            <option value="<?php echo $i; ?>">
+            <option value="<?php echo $i; ?>" <?php if($i==$time[0]) echo ' selected '; ?>>
                     <?php echo $i; ?>
                 </option>
             <?php

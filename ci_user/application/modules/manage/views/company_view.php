@@ -33,8 +33,6 @@
                     <input type="button" value="<?php echo $this->lang->line('delete');?>" class="btn btn-primary btn-small" onclick="get(<?php echo $l->id;?>,'delete')" />
                     <?php
                 }
-            ?>
-            <?php
                 $id = $this->session->userdata('id');
                 if($this->acl->can_edit($id,2))
                 {

@@ -141,16 +141,8 @@ class Manage extends MX_Controller {
                         }
                         
                     }
-                    $this->load->library('pagination');
-                    
-                    
                     $this->load->model('user_model');
                     $data['list'] = $list;
-                    
-                    $config['total_rows'] = $num_rows;
-                    $config['base_url'] = base_url()."index.php/manage/manage/index";
-                    $config['per_page'] = 3;
-                    $config['use_page_numbers'] = TRUE;
                     //$config['next_link'] = 'Next';
                     
                     $z['total_row'] = $num_rows;
@@ -159,7 +151,6 @@ class Manage extends MX_Controller {
                     $z['curpage'] = $curpage;
                     $this->load->model('page_model');
                     
-                    $this->pagination->initialize($config);
                     
                     $data["pagination"] =  $this->page_model->create_page($z);
                   //  $data['sortby'] = $order;
@@ -336,7 +327,7 @@ class Manage extends MX_Controller {
             else
             {
                 $id = $this->session->userdata('id');
-                if(!$this->acl->can_view($id, 2))
+                if(!$this->acl->can_view($id, 1))
                 {
                     redirect(base_url().'index.php/login/log/profile', 'location');
                 }
