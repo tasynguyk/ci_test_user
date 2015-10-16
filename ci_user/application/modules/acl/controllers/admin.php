@@ -116,6 +116,11 @@ class Admin extends MX_Controller {
                 {
                     if($this->group_model->check_id_group($groupid))
                     {
+                        if($this->input->post('btncancel'))
+                        {
+                            $this->session->unset_userdata('search_member');
+                            redirect(base_url().'index.php/acl/admin/member/'.$groupid,'location');
+                        }
                         if($this->input->post('add') && $this->input->post('user_add')!='0')
                         {
                             $userid = $this->input->post('user_add');
@@ -139,11 +144,6 @@ class Admin extends MX_Controller {
                                 $this->session->unset_userdata('search_member');
                             }
                             $this->session->set_userdata('curgroup', $groupid);
-                        }
-                        if($this->input->post('btncancel'))
-                        {
-                            $this->session->unset_userdata('search_member');
-                            redirect(base_url().'index.php/acl/admin/member/'.$groupid,'location');
                         }
                         if($this->input->post('btnsearch') && $this->input->post('txtsearch')!='')
                         {

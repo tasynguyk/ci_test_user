@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Oct 15, 2015 at 06:04 PM
+-- Generation Time: Oct 16, 2015 at 01:31 PM
 -- Server version: 5.5.44-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.13
 
@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `group` (
   `name` varchar(45) CHARACTER SET utf8 NOT NULL,
   `description` varchar(250) CHARACTER SET utf8 DEFAULT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 --
 -- Dumping data for table `group`
@@ -88,12 +88,12 @@ CREATE TABLE IF NOT EXISTS `group_resource` (
 
 INSERT INTO `group_resource` (`ID`, `groupID`, `resourceID`, `create`, `edit`, `delete`) VALUES
 (1, 1, 1, 1, 1, 1),
-(2, 2, 2, 1, 1, 1),
 (3, 1, 2, 1, 1, 1),
-(4, 3, 2, 1, 0, 1),
+(4, 3, 2, 1, 0, 0),
 (5, 4, 1, 1, 1, 0),
 (6, 1, 3, 1, 1, 1),
-(7, 1, 4, 1, 1, 1);
+(7, 1, 4, 1, 1, 1),
+(9, 2, 2, 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -147,7 +147,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `gender` tinyint(1) DEFAULT NULL,
   `companyid` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=14 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
 
 --
 -- Dumping data for table `user`
@@ -161,8 +161,9 @@ INSERT INTO `user` (`id`, `username`, `password`, `email`, `permission`, `dob`, 
 (9, 'usertest3', '202cb962ac59075b964b07152d234b70', 'usertest@mail.com', 0, '2000-06-04', 1, 1, 4),
 (10, 'usertest4', 'usertest', 'usertest4@mail.com', 0, '1990-12-25', 1, 1, 1),
 (11, 'root', 'e10adc3949ba59abbe56e057f20f883e', 'root@gmail.com', 1, '2000-03-03', 1, 1, 1),
-(12, 'kira', '202cb962ac59075b964b07152d234b70', 'kira@light.com', 0, '1997-07-04', 1, 1, 1),
-(13, 'moon', '202cb962ac59075b964b07152d234b70', 'moon@mym.com', 1, '1992-06-01', 1, 1, 1);
+(12, 'kira', '202cb962ac59075b964b07152d234b70', 'kira@light.com', 1, '1997-07-04', 1, 1, 1),
+(13, 'moon', '202cb962ac59075b964b07152d234b70', 'moon@mym.com', 1, '1992-06-01', 1, 1, 1),
+(14, 'admin', '202cb962ac59075b964b07152d234b70', '123456@dfgdf.vc', 0, '2003-02-02', 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -175,7 +176,7 @@ CREATE TABLE IF NOT EXISTS `user_group` (
   `userID` int(11) NOT NULL,
   `groupID` int(11) NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
 
 --
 -- Dumping data for table `user_group`
@@ -183,9 +184,9 @@ CREATE TABLE IF NOT EXISTS `user_group` (
 
 INSERT INTO `user_group` (`ID`, `userID`, `groupID`) VALUES
 (1, 1, 1),
-(2, 11, 3),
 (3, 12, 2),
-(7, 13, 4);
+(7, 13, 4),
+(8, 7, 3);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

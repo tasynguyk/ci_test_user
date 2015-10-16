@@ -355,7 +355,6 @@ class Manage extends MX_Controller {
                             {
                                 $this->load->model('user_model');
                                 $data['user'] = $this->user_model->get_user_byid($id);
-                               // $this->load->view('master_layout',$data);
                             }
                             else 
                             {
@@ -537,10 +536,6 @@ class Manage extends MX_Controller {
                     }
                     
                     $this->load->model('company_model');
-                    
-                    
-                    
-                    
                     if($this->input->post('btncancel'))
                     {
                         $this->session->unset_userdata('company_search');

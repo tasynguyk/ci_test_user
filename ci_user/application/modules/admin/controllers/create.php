@@ -54,7 +54,10 @@ class Create extends MX_Controller {
                     $this->load->model('company_model');
                     
                   //  $data[]
-                    
+                    if($this->input->post('cancel'))
+                    {
+                        redirect(base_url().'index.php/login/log/profile','location');
+                    }   
                     if($this->input->post('create'))
                     {
                         $this->form_validation->set_rules('username',$this->lang->line('username'),'trim|required');
@@ -76,7 +79,6 @@ class Create extends MX_Controller {
                             if(!$this->time_model->check_time($day,$month,$year))
                             {
                                 $data['error'] = $this->lang->line('dob_valid');
-                                $data['page_content'] = $this->load->view('create_view',$data,true);
                             }
                             else
                             {
@@ -90,7 +92,6 @@ class Create extends MX_Controller {
                                 if(!$this->user_model->check_user($username, $email))
                                 {
                                     $data['error'] = $this->lang->line('username_email_use');
-                                    $data['page_content'] = $this->load->view('create_view',$data,true);
                                 }
                                 else 
                                 {
@@ -142,6 +143,10 @@ class Create extends MX_Controller {
                 else
                 {
                     $this->load->model('company_model');
+                    if($this->input->post('cancel'))
+                    {
+                        redirect(base_url().'index.php/login/log/profile','location');
+                    }
                     if($this->input->post('create'))
                     {
                         $this->form_validation->set_rules('en_name',$this->lang->line('company_name_en'),'trim|required');
