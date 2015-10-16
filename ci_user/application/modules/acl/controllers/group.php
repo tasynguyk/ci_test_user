@@ -30,7 +30,7 @@ class Group extends MX_Controller {
             }
             else
             {
-                $this->lang->load('form','vietnamese');
+                $this->lang->load('form','english');
             }
         }
          
@@ -56,8 +56,29 @@ class Group extends MX_Controller {
                         redirect(base_url().'index.php/acl/group/edit', 'location');
                         
                     }
-                    $list = $this->group_model->list_group($page);
-                    $num_rows = $this->group_model->numrows_group();
+                    if($this->input->post('btncancel'))
+                    {
+                        $this->session->unset_userdata('search_group');
+                        redirect(base_url().'index.php/acl/group/index','location');
+                    }
+                    if($this->input->post('btnsearch') && $this->input->post('txtsearch')!='')
+                    {
+                        $search = $this->input->post('txtsearch');
+                        $this->session->set_userdata('search_group',$search);
+                    }
+                    if($this->session->userdata('search_group'))
+                    {
+                        $search = $this->session->userdata('search_group');
+                        $list = $this->group_model->search_group($page, $search);
+                        $num_rows = $this->group_model->search_numrow_group($search);
+                    }
+                    else
+                    {
+                        $list = $this->group_model->list_group($page);
+                        $num_rows = $this->group_model->numrows_group();
+                    }
+                        
+                    
                         
                     $this->load->library('My_page');
                     $z['total_row'] = $num_rows;

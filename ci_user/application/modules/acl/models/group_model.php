@@ -13,6 +13,18 @@ class group_model extends CI_Model
         $q = $this->db->query("select * from `group` where id<>1 order by name limit $page,3");
         return $q->result();
     }
+
+    public function search_group($page, $search) 
+    {
+        $q = $this->db->query("select * from `group` where name like '%$search%' and id<>1 order by name limit $page,3");
+        return $q->result();
+    }
+
+    public function search_numrow_group($search)
+    {
+        $q = $this->db->query("select * from `group` where name like '%$search%' and id<>1");
+        return $q->num_rows();
+    }
     
     public function numrows_group()
     {
@@ -70,13 +82,40 @@ class group_model extends CI_Model
     }
 
 
-    public function get_user_group($id)
+    public function get_user_group($id, $page)
+    {
+        $q = $this->db->query("select user.username as 'username', user.email as 'email',user.id as 'id'"
+                . " from user, user_group "
+                . " where user.id=user_group.userid and "
+                . " user_group.groupid=$id order by user.username limit $page,3");
+        return $q->result();
+    }
+
+    public function search_numrow_member($search, $id)
+    {
+        $q = $this->db->query("select user.username as 'username', user.email as 'email',user.id as 'id'"
+                . " from user, user_group "
+                . " where user.id=user_group.userid and user.username like '%$search%' and "
+                . " user_group.groupid=$id order by user.username");
+        return $q->num_rows();
+    }
+
+    public function search_member_group($page, $search, $id)
+    {
+        $q = $this->db->query("select user.username as 'username', user.email as 'email',user.id as 'id'"
+                . " from user, user_group "
+                . " where user.id=user_group.userid and user.username like '%$search%' and "
+                . " user_group.groupid=$id order by user.username limit $page,3");
+        return $q->result();
+    }
+
+    public function user_numrows_group($id)
     {
         $q = $this->db->query("select user.username as 'username', user.email as 'email',user.id as 'id'"
                 . " from user, user_group "
                 . " where user.id=user_group.userid and "
                 . " user_group.groupid=$id");
-        return $q->result();
+        return $q->num_rows();
     }
     
     public function free_user_group()
@@ -148,6 +187,12 @@ class group_model extends CI_Model
         
         $this->db->where('ID',$id);
         $this->db->delete('group');
+    }
+    
+    public function  get_name_group($id)
+    {
+        $q = $this->db->query("select name from `group` where ID=$id");
+        return $q->row()->name;
     }
 }
  

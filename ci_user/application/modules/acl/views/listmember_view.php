@@ -13,9 +13,9 @@
       <input type="text" name="txtsearch" placeholder="<?php echo  $this->lang->line('search');?>" />
   <button type="submit" class="btn btn-primary" value="btnsearch" name="btnsearch" value="Search" data-loading-text="loading..." id="form-login-btnLogin"><?php echo  $this->lang->line('search');?></button>
   <?php
-            if($this->session->userdata('search'))
+            if($this->session->userdata('search_member'))
             {
-                echo  $this->lang->line('search_for').' \''.$this->session->userdata('search').'\'';
+                echo  $this->lang->line('search_for').' \''.$this->session->userdata('search_member').'\'';
                 ?>
                 <button type="submit" class="btn btn-primary" value="cancel" name="btncancel" value="Search" data-loading-text="loading..." id="form-login-btnLogin"><?php echo  $this->lang->line('cancel').' '.$this->lang->line('search');?></button>
                 <?php
@@ -53,6 +53,7 @@
         }
         ?>         
   </table>
+  <?php echo $pagination; ?>
    </form>
   <?php// echo $pagination; ?><br />
  

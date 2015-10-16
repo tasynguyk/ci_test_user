@@ -30,7 +30,7 @@ class Admin extends MX_Controller {
             }
             else
             {
-                $this->lang->load('form','vietnamese');
+                $this->lang->load('form','english');
             }
         }
          
@@ -56,40 +56,27 @@ class Admin extends MX_Controller {
                         redirect(base_url().'index.php/acl/group/edit', 'location');
                         
                     }
-                    /*
-                    $this->load->model('company_model');
-                    
-                    
-                    
-                    
                     if($this->input->post('btncancel'))
                     {
-                        $this->session->unset_userdata('company_search');
-                        redirect(base_url().'index.php/manage/manage/company', 'location');
+                        $this->session->unset_userdata('search_group');
+                        redirect(base_url().'index.php/acl/admin/index','location');
                     }
-                    if($this->input->post('btnsearch'))
+                    if($this->input->post('btnsearch') && $this->input->post('txtsearch')!='')
                     {
                         $search = $this->input->post('txtsearch');
-                        
-                        $this->session->set_userdata('company_search',$search);
-                        $list = $this->company_model->search_company($page, $search);
-                            $num_rows = $this->company_model->search_numrows_company($search);
+                        $this->session->set_userdata('search_group',$search);
+                        redirect(base_url().'index.php/acl/admin/index/'.$groupid,'location');
                     }
-                    else*/
+                    if($this->session->userdata('search_group'))
                     {
-                        if($this->session->userdata('group_search'))
-                        {
-                         //   $search = $this->session->userdata('company_search');
-                          //  $list = $this->company_model->search_company($page, $search);
-                          //  $num_rows = $this->company_model->search_numrows_company($search);
-                            
-                        }
-                        else
-                        {
-                            $list = $this->group_model->list_group($page);
-                            $num_rows = $this->group_model->numrows_group();
-                        }
-                        
+                        $search = $this->session->userdata('search_group');
+                        $list = $this->group_model->search_group($page, $search);
+                        $num_rows = $this->group_model->search_numrow_group($search);
+                    }
+                    else
+                    {
+                        $list = $this->group_model->list_group($page);
+                        $num_rows = $this->group_model->numrows_group();
                     }
                     $this->load->library('My_page');
                     $z['total_row'] = $num_rows;
@@ -139,17 +126,61 @@ class Admin extends MX_Controller {
                             $userid = $this->input->post('memberid');
                             $this->group_model->delete_member_group($userid, $groupid);
                         }
+                        $curpage = $page;
+                        $page = (($page-1)*3);
+                        if(!$this->session->userdata('curgroup'))
+                        {
+                            $this->session->set_userdata('curgroup', $groupid);
+                        }
+                        else
+                        {
+                            if($this->session->userdata('curgroup')!=$groupid)
+                            {
+                                $this->session->unset_userdata('search_member');
+                            }
+                            $this->session->set_userdata('curgroup', $groupid);
+                        }
+                        if($this->input->post('btncancel'))
+                        {
+                            $this->session->unset_userdata('search_member');
+                            redirect(base_url().'index.php/acl/admin/member/'.$groupid,'location');
+                        }
+                        if($this->input->post('btnsearch') && $this->input->post('txtsearch')!='')
+                        {
+                            $search = $this->input->post('txtsearch');
+                            $this->session->set_userdata('search_member',$search);
+                            redirect(base_url().'index.php/acl/admin/member/'.$groupid,'location');
+                        }
+                        if($this->session->userdata('search_member'))
+                        {
+                            $search = $this->session->userdata('search_member');
+                            $list = $this->group_model->search_member_group($page, $search, $groupid);
+                            $num_rows = $this->group_model->search_numrow_member($search, $groupid);
+                        }
+                        else
+                        {
+                            $list = $this->group_model->get_user_group($groupid, $page);
+                            $num_rows = $this->group_model->user_numrows_group($groupid);
+                        }
+                        $name = $this->group_model->get_name_group($groupid);
+                        $this->load->library('My_page');
+                        $z['total_row'] = $num_rows;
+                        $z['item_per_page'] = 3;
+                        $z['curpage'] = $curpage;
+                        $z['url'] = base_url().'index.php/acl/admin/member/'.$groupid;
+
+                        $data['pagination'] = $this->my_page->create_page($z);
                         $data['page_js'] = $this->load->view('js/member_js_view','',true);
                         $data['free_list'] = $this->group_model->free_user_group();
-                        $data['list'] = $this->group_model->get_user_group($groupid);
+                        $data['list'] = $list;
                         $data['page_title'] = 'Sutrix media | '.$this->lang->line('manage_member');
-                        $data['page_sub_title'] = $this->lang->line('manage_member');
+                        $data['page_sub_title'] = $this->lang->line('manage_member').' ('.$name.')';
                         $data['page_content'] = $this->load->view('listmember_view',$data,true);
                         $this->load->view('master_layout',$data);
                     }
                     else
                     {
-                        redirect(base_url().'index.php/acl/admin/member','location');
+                        redirect(base_url().'index.php/acl/admin','location');
                     }
                     
                 }
@@ -210,12 +241,13 @@ class Admin extends MX_Controller {
                             }
                             
                         }
+                        $name = $this->group_model->get_name_group($groupid);
                         $data['free'] = $this->group_model->free_rs_group($groupid);
                         $data['page_js'] = $this->load->view('js/rs_js_view','',true);
                         $data['free_list'] = $this->group_model->free_user_group();
                         $data['list'] = $this->group_model->get_resource_group($groupid);
-                        $data['page_title'] = 'Sutrix media | '.$this->lang->line('manage_member');
-                        $data['page_sub_title'] = $this->lang->line('manage_member');
+                        $data['page_title'] = 'Sutrix media | '.$this->lang->line('manage_permission');
+                        $data['page_sub_title'] = $this->lang->line('manage_permission').' ('.$name.')';;
                         $data['page_content'] = $this->load->view('list_resource_view',$data,true);
                         $this->load->view('master_layout',$data);
                     }

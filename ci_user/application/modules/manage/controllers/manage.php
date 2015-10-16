@@ -30,7 +30,7 @@ class Manage extends MX_Controller {
             }
             else
             {
-                $this->lang->load('form','vietnamese');
+                $this->lang->load('form','english');
             }
         }
          
@@ -151,9 +151,7 @@ class Manage extends MX_Controller {
                     $z['curpage'] = $curpage;
                     $this->load->model('page_model');
                     
-                    
                     $data["pagination"] =  $this->page_model->create_page($z);
-                  //  $data['sortby'] = $order;
                     
                     $data['page_content'] = $this->load->view('list_view',$data,true);
                     $data['page_sub_title'] = $this->lang->line('manage_user');

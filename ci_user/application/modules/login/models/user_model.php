@@ -29,6 +29,19 @@ class user_model extends CI_Model
         return $q->row();
     }
     
+    public function get_group($id)
+    {
+        $q = $this->db->query("select gr.name as 'name' from user us, user_group ug, `group`gr "
+                . "where us.id = ug.ID and ug.groupid = gr.ID and us.id=$id");
+        if($q->num_rows()!=0)
+        {
+            return $q->row()->name;
+        }
+        else
+        {
+            return $this->lang->line('free_user');
+        }
+    }
 }
  
 ?>

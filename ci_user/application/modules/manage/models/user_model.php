@@ -26,7 +26,9 @@ class user_model extends CI_Model
         $lang_use = $this->get_lang();
         $q = $this->db->query("select user.id, user.username, user.email, user.dob, user.status, user.gender, user.permission, company.$lang_use as 'name' "
                 . "from user, company where user.id<>'$id' and "
-                . "permission<$permisson and user.companyid=company.company_id order by $order limit $page,3");
+                . " user.companyid=company.company_id and user.id not in"
+                . " (select userid from user_group where groupid=1)"
+                . " order by $order limit $page,3");
         return $q->result();
     }
     

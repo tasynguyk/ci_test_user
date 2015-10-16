@@ -19,7 +19,7 @@
         </div>
         </div>
       <div class="form-actions">
-        <input type="submit" class="btn btn-primary" name="create" value="<?php echo $this->lang->line('edit_group'); ?>" />
+        <input type="submit" class="btn btn-primary" name="create" value="<?php echo $this->lang->line('create_group'); ?>" />
         <input type="submit" class="btn" name="cancel" value="<?php echo $this->lang->line('cancel'); ?>" />
       </div>
  </form>

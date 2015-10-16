@@ -61,7 +61,6 @@ class Log extends MX_Controller {
                             $this->session->set_userdata('id',$user->id);
                             $this->session->set_userdata('username',$user->username);
                             $this->session->set_userdata('permission',$user->permission);
-                            
                             redirect(base_url().'index.php/login/log/profile', 'location');
                         }
                         else
@@ -86,8 +85,11 @@ class Log extends MX_Controller {
         {
             if($this->session->userdata('islogin')==1)
             {
-                $this->lang->load('form','vietnamese');
+                $id = $this->session->userdata('id');
+                $this->load->model("user_model");
+                $data['group'] = $this->user_model->get_group($id);
                 $data['username'] = $this->session->userdata('username');
+                $data['page_sub_title'] = $this->lang->line('profile');
                 $data['page_title'] = 'Sutrixmedia | '.$this->lang->line('profile');
                 $data['page_content'] = $this->load->view('profile_view',$data,true);
                 $this->load->view('master_layout', $data);

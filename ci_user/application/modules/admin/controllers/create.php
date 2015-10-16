@@ -30,7 +30,7 @@ class Create extends MX_Controller {
             }
             else
             {
-                $this->lang->load('form','vietnamese');
+                $this->lang->load('form','english');
             }
         }
          
