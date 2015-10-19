@@ -149,21 +149,28 @@ class Create extends MX_Controller {
                     }
                     if($this->input->post('create'))
                     {
-                        $this->form_validation->set_rules('en_name',$this->lang->line('company_name_en'),'trim|required');
-                        $this->form_validation->set_rules('vi_name',$this->lang->line('company_name_vi'),'trim|required');
+                        $this->form_validation->set_rules('name',$this->lang->line('company_name'),'trim|required');
                         if($this->form_validation->run()!=FALSE)
                         {
-                            $en_name = $this->input->post('en_name');
-                            $vi_name = $this->input->post('vi_name');
-                            if(!$this->company_model->check_name_company($en_name, $vi_name))
+                            $name = $this->input->post('name');
+                            $language = $this->session->userdata('lang');
+                            
+                            $add = array(
+                              'name' => $name,
+                              'language' => $language
+                            );
+                            
+                            
+                            if(!$this->company_model->check_name_company($name, $language))
                             {
                                 $data['error'] = $this->lang->line('company_name_use');
                             }
                             else
                             {
-                                $this->company_model->insert_company($en_name, $vi_name);
+                                $this->company_model->insert_company($add);
                                 $data['error'] = $this->lang->line('compele');
                             }
+                            
                         }
                     }
                     $data['page_title'] = 'Sutrix media | '.$this->lang->line('create_company');

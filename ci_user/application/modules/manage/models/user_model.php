@@ -10,26 +10,28 @@ class user_model extends CI_Model
     
     public function get_lang()
     {
-        if($this->session->userdata('lang'))
-        {
-            if($this->session->userdata('lang')=='english')
-            {
-                return 'en_name';
-            }
-            return 'vi_name';
-        }
-        return 'en_name';
+        return $this->session->userdata('lang');
     }
             
     function get_list_user($id, $permisson, $page, $order)
     {
-        $lang_use = $this->get_lang();
-        $q = $this->db->query("select user.id, user.username, user.email, user.dob, user.status, user.gender, user.permission, company.$lang_use as 'name' "
-                . "from user, company where user.id<>'$id' and "
-                . " user.companyid=company.company_id and user.id not in"
-                . " (select userid from user_group where groupid=1)"
-                . " order by $order limit $page,3");
-        return $q->result();
+        $lang = $this->get_lang();
+        $q = $this->db->query("select * from user where id<>$id and permission<$permisson order by $order limit $page,3");
+        $ret = $q->result();
+        foreach ($ret as $l)
+        {
+            $n = $this->db->query("select * from company_name "
+                    . " where company_id=$l->companyid and language='$lang'");  
+            if($n->num_rows()>0)
+            {
+                $l->name = $n->row()->name;
+            }
+            else
+            {
+                $l->name = '('.$this->lang->line("unname_company").' '.$l->companyid.')';
+            }
+        }
+        return $ret;
     }
     
     function get_listuser_nopage($id, $permisson, $order)
@@ -51,11 +53,25 @@ class user_model extends CI_Model
     
     function search_user($id, $permisson, $page, $order, $search)
     {
-        $lang_use = $this->get_lang();
-        $q = $this->db->query("select user.id, user.username, user.email, user.dob, user.status, user.gender, user.permission, company.$lang_use as 'name' "
-                . "from user, company where user.id<>'$id' and username like '%$search%' and "
-                . "permission<$permisson and user.companyid=company.company_id order by $order limit $page,3");
-        return $q->result();
+        $lang = $this->get_lang();
+        $q = $this->db->query("select * from user where id<>$id and permission<$permisson "
+                . " and username like '%$search%' "
+                . " order by $order limit $page,3");
+        $ret = $q->result();
+        foreach ($ret as $l)
+        {
+            $n = $this->db->query("select * from company_name "
+                    . " where company_id=$l->companyid and language='$lang'");  
+            if($n->num_rows()>0)
+            {
+                $l->name = $n->row()->name;
+            }
+            else
+            {
+                $l->name = '('.$this->lang->line("unname_company").' '.$l->companyid.')';
+            }
+        }
+        return $ret;
     }
     
     function search_numrow_user($id, $permisson, $search)

@@ -10,22 +10,31 @@ class Company_model extends CI_Model
     
     public function get_lang()
     {
-        if($this->session->userdata('lang'))
-        {
-            if($this->session->userdata('lang')=='english')
-            {
-                return 'en_name';
-            }
-            return 'vi_name';
-        }
-        return 'en_name';
+        return $this->session->userdata('lang');
     }
     
     public function get_company($page)
     {
         $lang = $this->get_lang();
-        $q = $this->db->query("select company_id as 'id', $lang as 'name' from company order by $lang limit $page,3");
-        return $q->result();
+        $q = $this->db->query("select * from company order by id limit $page,3");
+        $ret = array();
+        foreach ($q->result() as $l)
+        {
+            $p = new stdClass();
+            $p->id = $l->id;
+            $n = $this->db->query("select * from company_name "
+                    . " where company_id=$p->id and language='$lang'");
+            if($n->num_rows()>0)
+            {
+                $p->name = $n->row()->name;
+            }
+            else
+            {
+                $p->name = '('.$this->lang->line("unname_company").' '.$p->id.')';
+            }
+            array_push($ret, $p);
+        }
+        return $ret;
     }
     
     public function get_num_company()
@@ -37,9 +46,10 @@ class Company_model extends CI_Model
     public function search_company($page, $search)
     {
         $lang = $this->get_lang();
-        
-        $q = $this->db->query("select company_id as 'id', $lang as 'name' from company where "
-                . "$lang like '%$search%' order by $lang limit $page,3");
+        $q = $this->db->query("select c.id as 'id', n.name as 'name'"
+                . " from company c, company_name n where "
+                . "c.id=n.company_id and n.language='$lang' and n.name like '%$search%' "
+                . " order by n.name limit $page, 3");
         return $q->result();
     }
     
@@ -47,8 +57,9 @@ class Company_model extends CI_Model
     {
         $lang = $this->get_lang();
         
-        $q = $this->db->query("select * from company where "
-                . "$lang like '%$search%'");
+        $q = $this->db->query("select c.id as 'id', n.name as 'name'"
+                . " from company c, company_name n where "
+                . "c.id=n.company_id and n.language='$lang' and n.name like '%$search%'");
         
         return $q->num_rows();
     }
@@ -56,27 +67,54 @@ class Company_model extends CI_Model
     public function get_company_list()
     {
         $lang = $this->get_lang();
-        
-        $q = $this->db->query("select company_id as 'id', $lang as 'name' from company");
-        
-        return $q->result();
+        $q = $this->db->query("select * from company");
+        $ret = array();
+        foreach ($q->result() as $l)
+        {
+            $p = new stdClass();
+            $p->id = $l->id;
+            $n = $this->db->query("select * from company_name "
+                    . " where company_id=$p->id and language='$lang'");
+            if($n->num_rows()>0)
+            {
+                $p->name = $n->row()->name;
+            }
+            else
+            {
+                $p->name = '('.$this->lang->line("unname_company").' '.$p->id.')';
+            }
+            array_push($ret, $p);
+        }
+        return $ret;
     }
     
     public function get_company_byid($id)
     {
-        $q = $this->db->query("select * from company where company_id = '$id'");
-        return $q->row();
+        $q = $this->db->query("select * from company where id = '$id'");
+        $lang = $this->get_lang();
+        $ret = new stdClass();
+        $ret->id = $id;
+        $name = $this->db->query("select * from company_name "
+                    . " where company_id=$id and language='$lang'");
+        if($name->num_rows()>0)
+        {
+            $ret->name = $name->row()->name;
+        }
+        else
+        {
+            $ret->name = '';
+        }
+        return $ret;
     }
     
-    public function check_company($en_name, $vi_name, $id)
+    public function check_company($name, $id)
     {
-        $q1 = $this->db->query("select * from company where "
-                . " vi_name='$vi_name' and company_id <> $id")->num_rows();
-        $q2 = $this->db->query("select * from company where "
-                . " en_name='$en_name' and company_id <> $id")->num_rows();
+        $lang = $this->get_lang();
+        $q = $this->db->query("select * from company_name where "
+                . " name='$name' and company_id <> $id and language='$lang'")->num_rows();
         
         
-        if($q1+$q2>0)
+        if($q>0)
         {
             return FALSE;
         }
@@ -86,10 +124,26 @@ class Company_model extends CI_Model
         }
     }
     
-    public function update_company($id, $data)
+    public function update_company($id, $name)
     {
-        $this->db->where('company_id', $id);
-        $this->db->update('company', $data);
+        $info = array('name'=>$name);
+        $lang = $this->get_lang();
+        $q = $this->db->query("select * from company_name where company_id=$id and language = '$lang'");
+        if($q->num_rows()>0)
+        {
+            $this->db->where('company_id', $id);
+            $this->db->where('language',$lang);
+            $this->db->update('company_name', $info);
+        }
+        else
+        {
+            $add = array (
+                'name' => $name,
+                'language' => $lang,
+                'company_id' => $id
+            );
+            $this->db->insert('company_name',$add);
+        }
     }
     
     public function check_delete_company($id)
@@ -107,7 +161,10 @@ class Company_model extends CI_Model
     
     public function  delete_company($id)
     {
-        $this->db->where('company_id', $id);
+        $this->db->where('company_id',$id);
+        $this->db->delete('company_name');
+        
+        $this->db->where('id', $id);
         $this->db->delete('company');
     }
 }
