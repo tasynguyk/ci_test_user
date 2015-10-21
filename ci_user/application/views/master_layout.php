@@ -7,7 +7,8 @@
     }
     else
     {
-        $this->lang->load('form','vietnamese');
+        $this->session->set_userdata('lang','english');
+        $this->lang->load('form','english');
     }
     if($this->session->userdata('theme'))
     {
@@ -116,7 +117,29 @@ body {
               ?>
              <li><a href="<?php echo base_url().'index.php/acl/admin';?>">Super Admin</a></li> 
               <?php
-            }     
+            }
+            if($this->acl->can_view($id, 5))
+            {
+              ?>
+             <li><a href="<?php echo base_url().'index.php/language/language';?>"><?php echo $this->lang->line('manage_language');?></a></li> 
+              <?php
+                if($this->acl->can_create($id, 5))
+                {
+                ?><li><a href="<?php echo base_url().'index.php/language/language/create'; ?>"><?php echo $this->lang->line('create_language'); ?></a></li>
+                <?php
+                }
+            }
+            if($this->acl->can_view($id, 6))
+            {
+              ?>
+             <li><a href="<?php echo base_url().'index.php/news/news';?>"><?php echo $this->lang->line('manage_news');?></a></li> 
+              <?php
+                if($this->acl->can_create($id, 6))
+                {
+                ?><li><a href="<?php echo base_url().'index.php/news/news/create'; ?>"><?php echo $this->lang->line('create_new'); ?></a></li>
+                <?php
+                }
+            }
             ?>
           </ul>
         </li>
@@ -124,6 +147,12 @@ body {
           <ul class="dropdown-menu">
                 <li><a href="<?php echo base_url().'index.php/change/lang/index/vi'; ?>"><?php echo $this->lang->line('lang_vi'); ?></a></li>
                 <li><a href="<?php echo base_url().'index.php/change/lang/index/en';?>"><?php echo $this->lang->line('lang_en'); ?></a></li>
+          </ul>
+        </li>
+        <li class="dropdown"> <a href="javascipt:void(0)" class="dropdown-toggle" data-toggle="dropdown"><?php echo $this->lang->line('message'); ?><b class="caret"></b></a>
+          <ul class="dropdown-menu">
+                <li><a href="<?php echo base_url().'index.php/mail/mail/send'; ?>"><?php echo $this->lang->line('message_send'); ?></a></li>
+                <li><a href="<?php echo base_url().'index.php/mail/mail';?>"><?php echo $this->lang->line('message_receive'); ?></a></li>
           </ul>
         </li>
         <li class="dropdown"> <a href="javascipt:void(0)" class="dropdown-toggle" data-toggle="dropdown"><?php echo $this->lang->line('theme'); ?><b class="caret"></b></a>

@@ -105,6 +105,32 @@ class Log extends MX_Controller {
             $this->session->sess_destroy();
             redirect(base_url().'index.php/login/log', 'location');
         }
+        
+        public function z()
+        {
+          //  $this->load->helper("captcha");
+          //  $vals = array(
+          //      'img_path' => './uploads/',
+           //     'img_url' => base_url().'/uploads/',
+        //        );
+$this->load->view('t');
+              /* Generate the captcha */
+          //  $captcha = create_captcha($vals);
+         //   echo 'gdffd';
+       //     echo $captcha['image'];
+        }
+        
+        public function capt()
+        {
+            $this->load->helper("captcha");
+            $vals = array(
+                'img_path' => './uploads/',
+                'img_url' => base_url().'/uploads/',
+                );
+              /* Generate the captcha */
+            $captcha = create_captcha($vals);
+            echo $captcha['image'];
+        }
 }
 
 /* End of file welcome.php */

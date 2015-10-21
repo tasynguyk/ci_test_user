@@ -16,14 +16,17 @@ class company_model extends CI_Model
     public function get_company()
     {
         $lang = $this->get_lang();
-        $q = $this->db->query("select * from company");
+        $q = $this->db->get("company");
         $ret = array();
         foreach ($q->result() as $l)
         {
             $p = new stdClass();
             $p->id = $l->id;
-            $n = $this->db->query("select * from company_name "
-                    . " where company_id=$p->id and language='$lang'");
+            
+            $this->db->where("company_id",$p->id);
+            $this->db->where("language",$lang);
+            $n = $this->db->get("company_name");
+            
             if($n->num_rows()>0)
             {
                 $p->name = $n->row()->name;
@@ -39,8 +42,10 @@ class company_model extends CI_Model
     
     public function check_name_company($name, $language)
     {
-        $q = $this->db->query("select * from company_name where "
-                . " language='$language' and name='$name' ");
+        $this->db->where("language",$language);
+        $this->db->where("name",$name);
+        $q = $this->db->get("company_name");
+        
         if($q->num_rows()>0)
         {
             return FALSE;

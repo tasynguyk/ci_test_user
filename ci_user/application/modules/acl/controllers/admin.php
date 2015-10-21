@@ -203,7 +203,7 @@ class Admin extends MX_Controller {
                 $this->load->model('group_model');
                 if($this->acl->can_view($id, $resource))
                 {
-                    if($this->group_model->check_id_group($groupid))
+                    if($this->group_model->check_id_group($groupid)) // check id group. If not alive we will redirect
                     {
                         if($this->input->post('add') && $this->input->post('rs_add')!='0')
                         {
