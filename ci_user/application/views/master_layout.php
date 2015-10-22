@@ -143,12 +143,39 @@ body {
             ?>
           </ul>
         </li>
-        <li class="dropdown"> <a href="javascipt:void(0)" class="dropdown-toggle" data-toggle="dropdown"><?php echo $this->lang->line('lang'); ?><b class="caret"></b></a>
+        <li class="dropdown"> <a href="javascipt:void(0)" class="dropdown-toggle" data-toggle="dropdown"><?php echo $this->lang->line('news'); ?><b class="caret"></b></a>
           <ul class="dropdown-menu">
-                <li><a href="<?php echo base_url().'index.php/change/lang/index/vi'; ?>"><?php echo $this->lang->line('lang_vi'); ?></a></li>
-                <li><a href="<?php echo base_url().'index.php/change/lang/index/en';?>"><?php echo $this->lang->line('lang_en'); ?></a></li>
+                <li><a href="<?php echo base_url().'index.php/front/news/index'; ?>"><?php echo $this->lang->line('read'); ?></a></li>
           </ul>
         </li>
+        <li class="dropdown"> <a href="javascipt:void(0)" class="dropdown-toggle" data-toggle="dropdown"><?php echo $this->lang->line('lang'); ?><b class="caret"></b></a>
+          <ul class="dropdown-menu">
+              <?php
+                $q = $this->db->get("language");
+                foreach ($q->result() as $l )
+                {
+                    ?>
+                        <li><a href="<?php echo base_url().'index.php/change/lang/index/'.$l->code; ?>"><?php echo $l->name; ?></a></li>
+                    <?php
+                }
+              ?>
+                
+          </ul>
+        </li>
+        <?php
+            if($this->session->userdata('permission')==2)
+            {
+                $this->db->where("status",0);
+                $q = $this->db->get("notification")->num_rows();
+                ?>
+                <li class="dropdown"> <a href="javascipt:void(0)" class="dropdown-toggle" data-toggle="dropdown"><?php echo $this->lang->line('notification_new'); ?> (<?php echo $q; ?>)<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                          <li><a href="<?php echo base_url().'index.php/back/notification/index'; ?>"><?php echo $this->lang->line('notification'); ?></a></li>
+                    </ul>
+                </li>
+                <?php
+            }
+        ?>
         <li class="dropdown"> <a href="javascipt:void(0)" class="dropdown-toggle" data-toggle="dropdown"><?php echo $this->lang->line('message'); ?><b class="caret"></b></a>
           <ul class="dropdown-menu">
                 <li><a href="<?php echo base_url().'index.php/mail/mail/send'; ?>"><?php echo $this->lang->line('message_send'); ?></a></li>

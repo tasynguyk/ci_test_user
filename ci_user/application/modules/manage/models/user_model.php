@@ -16,7 +16,7 @@ class user_model extends CI_Model
     function get_list_user($id, $permisson, $page, $order)
     {
         $lang = $this->get_lang();
-        
+        // 
         $this->db->where("id <>",$id);
         $this->db->where('permission <',$permisson);
         $this->db->order_by($order,'asc');
@@ -141,7 +141,7 @@ class user_model extends CI_Model
     {
         $this->db->select("*")->from("user")->where('username',$username)->where('id <>',$id);
         $q1 = $this->db->get();
-        $this->db->select("*")->from("user")->where('mail',$mail)->where('id <>',$id);
+        $this->db->select("*")->from("user")->where('email',$mail)->where('id <>',$id);
         $q2 = $this->db->get();
         if($q1->num_rows()+$q2->num_rows()>0)
         {

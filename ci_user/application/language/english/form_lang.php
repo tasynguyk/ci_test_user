@@ -71,6 +71,7 @@ $lang['company_name_en'] = 'Company english name';
 $lang['company_name_vi'] = 'Company vietnamese name';
 $lang['company_name_use'] = 'Company name has been used';
 $lang['edit_company'] = 'Edit company';
+$lang['unname_company'] = 'Unname company with id';
 
 $lang['groupname'] = 'Group name';
 $lang['description'] = 'Description';
@@ -86,3 +87,48 @@ $lang['free_user'] = 'Free user';
 $lang['add_to_group'] ='Add to group';
 $lang['delete_permission'] = 'Delete permission';
 $lang['edit_permission'] = 'Edit permission';
+$lang['resource'] = 'Resource';
+
+$lang['send'] = 'Send';
+$lang['mail_to'] = 'To';
+$lang['mail_from'] = 'From';
+$lang['subject'] = 'Subject';
+$lang['message'] = 'Message';
+$lang['see'] = 'See';
+$lang['time'] = 'Time';
+$lang['user_send'] = 'Send from';
+$lang['user_from'] = 'Send to';
+$lang['time_send'] = 'Time send';
+$lang['message_send'] = 'Send message';
+$lang['message_receive'] = 'Receive message';
+$lang['my_message'] = 'My message';
+$lang['send_message'] = 'Send mail';
+$lang['seen'] = 'Seen';
+$lang['unseen'] = 'Unseen';
+$lang['unseen_message'] = 'Unseen message';
+
+$lang['manage_language'] = 'Manage language';
+$lang['edit_language'] = 'Edit language';
+$lang['language_code'] = 'Language code';
+$lang['language_name'] = 'Language name';
+$lang['create_language'] = 'Create language';
+$lang['language_code_use'] = 'Language name or language code has been used';
+
+$lang['new_title'] = "New's title";
+$lang['new_description'] = "New's description";
+$lang['new_image'] = "New's image";
+$lang['new_content'] = "New's content";
+$lang['title_use'] = "New's title has been used";
+$lang['translate'] = 'Translate';
+$lang['no_translate'] = 'No translate';
+$lang['read'] = 'Read';
+$lang['edit_trans'] = "Edit translate"; 
+$lang['update_img'] = 'Update image';
+$lang['manage_news'] = 'Manage new';
+$lang['create_new'] = 'Create new';
+$lang['new_cmt'] = "Comment";
+$lang['content'] = 'Content';
+
+$lang['notification_new'] = 'Notification new';
+$lang['notification'] = 'Notification';
+$lang['news'] = 'News';

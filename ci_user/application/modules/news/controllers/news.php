@@ -43,7 +43,7 @@ class News extends MX_Controller {
             else
             {
                 $id = $this->session->userdata('id');
-                $resource = 4;
+                $resource = 6;
                 if(!$this->acl->can_view($id, $resource))
                 {
                     redirect(base_url().'index.php/login/log/profile', 'location');
@@ -99,8 +99,8 @@ class News extends MX_Controller {
                     $data['pagination'] = $this->my_page->create_page($z);
                     $data['lang'] = $this->news_model->get_lang();
                     $data['list'] = $list;
-                    $data['page_title'] = 'Sutrix media | '.$this->lang->line('create_l');
-                    $data['page_sub_title'] = $this->lang->line('create_company');
+                    $data['page_title'] = 'Sutrix media | '.$this->lang->line('manage_news');
+                    $data['page_sub_title'] = $this->lang->line('manage_news');
                     $data['page_content'] = $this->load->view('list_news_view',$data,true);
                     $this->load->view('master_layout',$data);
                 }
@@ -258,7 +258,7 @@ class News extends MX_Controller {
                 if($this->input->post('trans'))
                 {
                     $lang = $this->input->post('lang');
-                    $news = $news = $this->news_model->get_news_lang($newid, $lang);
+                    $news = $this->news_model->get_news_lang($newid, $lang);
                 }
                 else {
                     $news = $this->news_model->get_news_byid($newid);

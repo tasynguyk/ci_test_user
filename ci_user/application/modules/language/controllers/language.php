@@ -43,7 +43,7 @@ class Language extends MX_Controller {
             else
             {
                 $id = $this->session->userdata('id');
-                $resource = 4;
+                $resource = 5;
                 if(!$this->acl->can_view($id, $resource))
                 {
                     redirect(base_url().'index.php/login/log/profile', 'location');
@@ -106,7 +106,7 @@ class Language extends MX_Controller {
             else
             {
                 $id = $this->session->userdata('id');
-                $resource = 4;
+                $resource = 5;
                 if(!$this->acl->can_create($id, $resource))
                 {
                     redirect(base_url().'index.php/login/log/profile', 'location');
@@ -163,7 +163,7 @@ class Language extends MX_Controller {
             else
             {
                 $id = $this->session->userdata('id');
-                $resource = 4;
+                $resource = 5;
                 if(!$this->acl->can_delete($id, $resource) && !$this->acl->can_edit($id, $resource))
                 {
                     redirect(base_url().'index.php/login/log/profile', 'location');
