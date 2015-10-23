@@ -73,8 +73,15 @@ class News extends MX_Controller {
             $this->load->library("my_page");
             $this->load->model("news_model");
             $this->load->model("cmt_model");
-            // check
-            $lang ='en'; // get lang
+            if(!$this->session->userdata('lang'))
+            {
+                $name = "English";
+            }
+            else
+            {
+               $name = $this->session->userdata('lang'); 
+            }
+            $lang = $this->news_model->get_code_byname($name);
             $news = $this->news_model->get_news_lang($newid, $lang);
             if(!$this->news_model->check_news_byid($newid))
             {

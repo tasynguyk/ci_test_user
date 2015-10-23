@@ -18,6 +18,14 @@ class news_model extends CI_Model
         return $q->result();
     }
     
+    public function get_code_byname($name)
+    {
+        $this->db->where('name',$name);
+        $q = $this->db->get("language");
+        
+        return $q->row()->code;
+    }
+    
     public function get_row_news($lang)
     {
         $this->db->where('language_code',$lang);
