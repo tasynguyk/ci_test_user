@@ -33,6 +33,19 @@ class Create extends MX_Controller {
                 $this->lang->load('form','english');
             }
         }
+        
+        public function z()
+        {
+            mkdir("./application/language/z",0777);
+            $src = './application/language/english';
+            $dst = './application/language/z';
+            $files = glob("./application/language/english/*.*");
+                  foreach($files as $file){
+                  $file_to_go = str_replace($src,$dst,$file);
+                  copy($file, $file_to_go);
+                  }
+
+        }
          
 	public function index()
 	{

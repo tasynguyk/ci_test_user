@@ -99,6 +99,13 @@ class language_model extends CI_Model
         $this->db->where('language_code',$old);
         $this->db->delete('news_info');
     }
+    
+    public function get_name_byid($id)
+    {
+        $this->db->where("id",$id);
+        $q = $this->db->get("language")->row()->name;
+        return $q;
+    }
 }
  
 ?>

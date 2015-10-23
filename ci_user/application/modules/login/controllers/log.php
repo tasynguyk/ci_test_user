@@ -22,6 +22,7 @@ class Log extends MX_Controller {
             $this->load->library('form_validation');
             $this->load->database();
             $this->load->helper(array('form', 'url'));
+            
             if($this->session->userdata('lang'))
             {
                 $lang_use = $this->session->userdata('lang');
@@ -39,6 +40,7 @@ class Log extends MX_Controller {
         
 	public function index()
 	{
+            $this->session->set_userdata("lang","english");
             if($this->session->userdata("islogin"))
             {
                 redirect(base_url().'index.php/login/log/profile', 'location');
@@ -61,6 +63,7 @@ class Log extends MX_Controller {
                             $this->session->set_userdata('id',$user->id);
                             $this->session->set_userdata('username',$user->username);
                             $this->session->set_userdata('permission',$user->permission);
+                            $this->session->set_userdata("lang","english");
                             redirect(base_url().'index.php/login/log/profile', 'location');
                         }
                         else

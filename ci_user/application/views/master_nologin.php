@@ -66,10 +66,9 @@ body {
     <div class="container-fluid"> <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a> <a class="brand" href="javascript:void(0)">Sutrixmedia <span>Admin Panel</span></a>
       <div class="btn-group pull-right"> <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)"> <i class="icon-user icon-white"></i> <?php echo $this->session->userdata('username');?> <span class="caret"></span> </a>
         <ul class="dropdown-menu">
-          <li><a href="<?php echo base_url().'index.php/login/log/profile';?>"><?php echo $this->lang->line('profile'); ?></a></li>
+          <li><a href="<?php echo base_url().'index.php/login/log/';?>"><?php echo $this->lang->line('login'); ?></a></li>
           <li class="divider"></li>
-          <li><a href="<?php echo base_url().'index.php/login/log/logout'; ?>"><?php echo $this->lang->line('logout'); ?></a></li>
-        </ul>
+          </ul>
       </div>
       <ul class="nav pull-right">
         
